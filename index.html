@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>JARVIS AI</title>
+
+<style>
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #020914;
+  color: #00cfff;
+  font-family: Arial, sans-serif;
+  text-align: center;
+}
+
+header {
+  padding: 25px 10px;
+  font-size: 30px;
+  font-weight: bold;
+  letter-spacing: 5px;
+  text-shadow: 0 0 15px #00cfff;
+}
+
+.circle {
+  width: 220px;
+  height: 220px;
+  border: 3px solid #00cfff;
+  border-radius: 50%;
+  margin: 45px auto 25px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 25px #008cff,
+              inset 0 0 25px #008cff;
+  animation: glow 2s infinite alternate;
+}
+
+.core {
+  width: 115px;
+  height: 115px;
+  border: 4px solid #00cfff;
+  border-radius: 50%;
+  box-shadow: 0 0 25px #00cfff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 27px;
+}
+
+@keyframes glow {
+  from { transform: scale(1); }
+  to { transform: scale(1.04); }
+}
+
+#status {
+  color: #fff;
+  margin: 20px;
+  font-size: 15px;
+}
+
+button {
+  background: transparent;
+  color: #00cfff;
+  border: 2px solid #00cfff;
+  border-radius: 30px;
+  padding: 14px 25px;
+  margin: 8px;
+  font-size: 16px;
+  box-shadow: 0 0 12px #008cff;
+}
+
+button:active {
+  background: #007bff;
+  color: white;
+}
+
+#chat {
+  margin: 25px 15px;
+  padding: 15px;
+  border: 1px solid #007bff;
+  border-radius: 12px;
+  min-height: 100px;
+  color: white;
+  text-align: left;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+input {
+  width: 65%;
+  padding: 13px;
+  border-radius: 20px;
+  border: 1px solid #00cfff;
+  background: #061629;
+  color: white;
+  font-size: 15px;
+}
+
+footer {
+  margin-top: 35px;
+  font-size: 11px;
+  color: #568da9;
+}
+</style>
+</head>
+
+<body>
+
+<header>J.A.R.V.I.S</header>
+
+<div class="circle">
+  <div class="core">AI</div>
+</div>
+
+<div id="status">SYSTEM ONLINE</div>
+
+<button onclick="listen()">🎙 SPEAK</button>
+<button onclick="stopVoice()">STOP</button>
+
+<div id="chat">
+  JARVIS: Hello Sir. Systems are ready.
+</div>
+
+<input id="message"
+placeholder="Type your command...">
+
+<button onclick="sendMessage()">SEND</button>
+
+<footer>
+  JARVIS PERSONAL AI ASSISTANT
+</footer>
+
+<script>
+
+const statusText = document.getElementById("status");
+const chat = document.getElementById("chat");
+
+function reply(text) {
+  chat.innerHTML =
+    "JARVIS: " + text;
+
+  const speech = new SpeechSynthesisUtterance(text);
+  speech.lang = "en-IN";
+  speech.rate = 0.95;
+
+  window.speechSynthesis.cancel();
+  window.speechSynthesis.speak(speech);
+}
+
+function processCommand(command) {
+  command = command.toLowerCase();
+
+  if (command.includes("hello")) {
+    reply("Hello Sir. How can I help you?");
+  }
+
+  else if (command.includes("your name")) {
+    reply("I am JARVIS, your personal assistant.");
+  }
+
+  else if (command.includes("time")) {
+    reply("The time is " +
+      new Date().toLocaleTimeString());
+  }
+
+  else if (command.includes("date")) {
+    reply("Today's date is " +
+      new Date().toLocaleDateString());
+  }
+
+  else if (command.includes("open youtube")) {
+    reply("Opening YouTube.");
+    window.open("https://youtube.com", "_blank");
+  }
+
+  else if (command.includes("open google")) {
+    reply("Opening Google.");
+    window.open("https://google.com", "_blank");
+  }
+
+  else if (command.includes("battery")) {
+    if (navigator.getBattery) {
+      navigator.getBattery().then(b => {
+        reply("Battery level is " +
+          Math.round(b.level * 100) + " percent.");
+      });
+    } else {
+      reply("Battery information is not supported.");
+    }
+  }
+
+  else {
+    reply("I am ready for that command, Sir. My AI brain will be connected in the next update.");
+  }
+}
+
+function sendMessage() {
+  const input = document.getElementById("message");
+  const command = input.value.trim();
+
+  if (!command) return;
+
+  chat.innerHTML = "YOU: " + command;
+  input.value = "";
+  processCommand(command);
+}
+
+
+
+let recognition;
+
+function listen() {
+  alert("JARVIS microphone activated!");
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    statusText.innerText = "VOICE NOT SUPPORTED";
+    return;
+  }
+
+  try {
+    recognition = new SpeechRecognition();
+    recognition.lang = "en-IN";
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    recognition.onstart = () => {
+      statusText.innerText = "JARVIS LISTENING...";
+    };
+
+    recognition.onresult = (event) => {
+      const command =
+        event.results[0][0].transcript;
+
+      document.getElementById("message").value = command;
+      processCommand(command);
+    };
+
+    recognition.onerror = (event) => {
+      statusText.innerText = "ERROR: " + event.error;
+      console.log(event.error);
+    };
+
+    recognition.onend = () => {
+      statusText.innerText = "SYSTEM ONLINE";
+    };
+
+    recognition.start();
+
+  } catch (error) {
+    statusText.innerText = "VOICE ERROR";
+    console.log(error);
+  }
+}
+
+function stopVoice() {
+  if (recognition) {
+    recognition.abort();
+  }
+
+  window.speechSynthesis.cancel();
+  statusText.innerText = "SYSTEM ONLINE";
+}
+
+</script>
+
+</body>
+</html>
