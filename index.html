@@ -222,7 +222,7 @@ async function processCommand(command) {
 
   } catch (error) {
     console.error(error);
-    reply("Sorry Sir, my AI connection failed.");
+    reply("AI ERROR: " + error.message);
   }
   }
 }
