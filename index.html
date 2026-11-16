@@ -5,29 +5,24 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020914">
-<title>J.A.R.V.I.S | AI SYSTEM</title>
+<title>J.A.R.V.I.S | AI SYSTEM 3.0</title>
 
 <style>
 *{box-sizing:border-box}
-
 :root{
   --cyan:#00eaff;
   --blue:#087dff;
   --dark:#020914;
-  --panel:#06182b;
 }
-
 body{
   margin:0;
   min-height:100vh;
-  background:
-    radial-gradient(ellipse at 50% 35%,#082a49 0%,#020914 55%,#01050c 100%);
+  background:radial-gradient(ellipse at 50% 35%,#082a49 0%,#020914 55%,#01050c 100%);
   color:var(--cyan);
   font-family:Arial,sans-serif;
   text-align:center;
   overflow-x:hidden;
 }
-
 body:before{
   content:"";
   position:fixed;
@@ -39,7 +34,6 @@ body:before{
     linear-gradient(90deg,rgba(0,234,255,.12) 1px,transparent 1px);
   background-size:35px 35px;
 }
-
 header{
   padding:22px 10px 5px;
   font-size:29px;
@@ -47,13 +41,11 @@ header{
   letter-spacing:8px;
   text-shadow:0 0 15px var(--cyan);
 }
-
 .subtitle{
   font-size:10px;
   letter-spacing:4px;
   color:#559dbb;
 }
-
 #status{
   margin:18px 0 0;
   font-size:13px;
@@ -61,7 +53,6 @@ header{
   color:white;
   text-shadow:0 0 12px var(--cyan);
 }
-
 .reactor{
   width:270px;
   height:270px;
@@ -71,28 +62,24 @@ header{
   align-items:center;
   justify-content:center;
 }
-
 .ring{
   position:absolute;
   border-radius:50%;
   border:1px solid rgba(0,234,255,.65);
   box-shadow:0 0 15px rgba(0,160,255,.35);
 }
-
 .ring.one{
   width:260px;height:260px;
   border-top:3px solid var(--cyan);
   border-bottom:3px solid #087dff;
   animation:spin 9s linear infinite;
 }
-
 .ring.two{
   width:225px;height:225px;
   border-style:dashed;
   border-color:#078dff;
   animation:reverseSpin 14s linear infinite;
 }
-
 .ring.three{
   width:190px;height:190px;
   border-width:3px;
@@ -100,13 +87,11 @@ header{
   border-right-color:transparent;
   animation:spin 5s linear infinite;
 }
-
 .ring.four{
   width:150px;height:150px;
   border:2px dotted #00eaff;
   animation:reverseSpin 7s linear infinite;
 }
-
 .core{
   width:105px;
   height:105px;
@@ -122,14 +107,12 @@ header{
   animation:pulse 2s infinite alternate;
   z-index:2;
 }
-
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes reverseSpin{to{transform:rotate(-360deg)}}
 @keyframes pulse{
   from{box-shadow:0 0 20px #00dfff,0 0 35px #007bff}
   to{box-shadow:0 0 35px #00eaff,0 0 85px #007bff}
 }
-
 .visualizer{
   height:35px;
   display:flex;
@@ -138,7 +121,6 @@ header{
   gap:4px;
   margin:12px auto;
 }
-
 .visualizer span{
   display:block;
   width:4px;
@@ -148,15 +130,10 @@ header{
   box-shadow:0 0 8px var(--cyan);
   animation:wave .8s infinite ease-in-out alternate;
 }
-
 .visualizer span:nth-child(2n){animation-delay:.2s}
 .visualizer span:nth-child(3n){animation-delay:.4s}
 .visualizer span:nth-child(4n){animation-delay:.1s}
-
-@keyframes wave{
-  to{height:28px}
-}
-
+@keyframes wave{to{height:28px}}
 .panel{
   margin:18px 14px;
   padding:17px;
@@ -166,14 +143,12 @@ header{
   box-shadow:0 0 20px rgba(0,130,255,.12);
   text-align:left;
 }
-
 .panel h3{
   text-align:center;
   font-size:13px;
   letter-spacing:3px;
   margin:0 0 15px;
 }
-
 input{
   width:100%;
   padding:14px;
@@ -185,12 +160,10 @@ input{
   font-size:15px;
   outline:none;
 }
-
 input:focus{
   border-color:var(--cyan);
   box-shadow:0 0 12px #087dff;
 }
-
 button{
   padding:12px 17px;
   margin:5px;
@@ -203,25 +176,21 @@ button{
   cursor:pointer;
   box-shadow:0 0 10px rgba(0,180,255,.2);
 }
-
 button:active{
   background:#087dff;
   color:white;
 }
-
 .actions{
   display:flex;
   flex-wrap:wrap;
   justify-content:center;
 }
-
 #memoryStatus{
   text-align:center;
   color:#8abbd2;
   font-size:12px;
   margin-top:12px;
 }
-
 #chat{
   height:230px;
   overflow-y:auto;
@@ -234,42 +203,26 @@ button:active{
   line-height:1.6;
   overflow-wrap:anywhere;
 }
-
-.user{
-  color:#70dcff;
-  margin-bottom:12px;
-}
-
-.jarvis{
-  color:white;
-  margin-bottom:15px;
-}
-
+.user{color:#70dcff;margin-bottom:12px}
+.jarvis{color:white;margin-bottom:15px}
 .chatInput{
   display:flex;
   gap:5px;
   margin-top:10px;
 }
-
-.chatInput input{
-  flex:1;
-  min-width:0;
-}
-
+.chatInput input{flex:1;min-width:0}
 footer{
   padding:25px 10px;
   color:#477d9b;
   font-size:10px;
   letter-spacing:3px;
 }
-
 .small{
   font-size:10px;
   color:#598da9;
   text-align:center;
   margin-top:10px;
 }
-
 @media(max-width:380px){
   .reactor{transform:scale(.88);margin-top:5px;margin-bottom:0}
   header{font-size:25px}
@@ -293,7 +246,7 @@ footer{
   <div class="core">AI</div>
 </div>
 
-<div class="visualizer" id="visualizer">
+<div class="visualizer">
   <span></span><span></span><span></span><span></span>
   <span></span><span></span><span></span><span></span>
   <span></span><span></span><span></span><span></span>
@@ -303,7 +256,6 @@ footer{
 
 <div class="panel">
   <h3>🔐 PRIVATE MEMORY SYSTEM</h3>
-
   <input id="memoryKey" type="password"
   placeholder="Enter your private memory key">
 
@@ -318,6 +270,7 @@ footer{
 </div>
 
 <div class="actions">
+  <button onclick="activateWakeWord()">⚡ HEY JARVIS</button>
   <button onclick="listen()">🎙 START JARVIS</button>
   <button onclick="stopVoice()">⏹ STOP</button>
 </div>
@@ -341,7 +294,7 @@ footer{
 <footer>
   STARK INDUSTRIES TECHNOLOGY
   <br><br>
-  JARVIS AI SYSTEM • VERSION 2.0
+  JARVIS AI SYSTEM • VERSION 3.0
 </footer>
 
 <script>
@@ -360,6 +313,7 @@ let conversationMode=false;
 let recognitionActive=false;
 let isSpeaking=false;
 let isProcessing=false;
+let wakeWordMode=false;
 
 if(memoryKey){
   memoryInput.value=memoryKey;
@@ -449,8 +403,11 @@ function reply(text){
 
   speech.onend=()=>{
     isSpeaking=false;
+
     if(conversationMode){
-      statusText.innerText="READY FOR YOUR NEXT QUESTION";
+      statusText.innerText=wakeWordMode
+        ?"WAITING FOR HEY JARVIS"
+        :"READY FOR YOUR NEXT QUESTION";
       startListening();
     }else{
       statusText.innerText="SYSTEM ONLINE";
@@ -486,12 +443,30 @@ function startListening(){
 
     recognition.onstart=()=>{
       recognitionActive=true;
-      statusText.innerText="JARVIS LISTENING";
+      statusText.innerText=wakeWordMode
+        ?"WAITING FOR HEY JARVIS"
+        :"JARVIS LISTENING";
     };
 
     recognition.onresult=(event)=>{
-      const command=event.results[0][0].transcript.trim();
+      let command=event.results[0][0].transcript.trim();
       if(!command)return;
+
+      if(wakeWordMode){
+        const wakePattern=/hey\s+jarvis/i;
+
+        if(!wakePattern.test(command)){
+          statusText.innerText="WAITING FOR HEY JARVIS";
+          return;
+        }
+
+        command=command.replace(wakePattern,"").trim();
+
+        if(!command){
+          reply("Yes Sir. I'm listening.");
+          return;
+        }
+      }
 
       addMessage("YOU",command);
       isProcessing=true;
@@ -506,6 +481,7 @@ function startListening(){
 
       if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
         conversationMode=false;
+        wakeWordMode=false;
       }
     };
 
@@ -541,7 +517,29 @@ function listen(){
     return;
   }
 
+  wakeWordMode=false;
   conversationMode=true;
+  startListening();
+}
+
+function activateWakeWord(){
+  const SpeechRecognition=
+    window.SpeechRecognition||window.webkitSpeechRecognition;
+
+  if(!SpeechRecognition){
+    alert("Please use Chrome with microphone permission.");
+    return;
+  }
+
+  if(!memoryKey){
+    alert("Sir, save your private memory key first.");
+    memoryInput.focus();
+    return;
+  }
+
+  wakeWordMode=true;
+  conversationMode=true;
+  statusText.innerText="WAITING FOR HEY JARVIS";
   startListening();
 }
 
@@ -645,6 +643,7 @@ function sendMessage(){
 
 function stopVoice(){
   conversationMode=false;
+  wakeWordMode=false;
 
   if(recognition){
     try{recognition.abort();}catch(error){}
