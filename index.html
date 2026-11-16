@@ -5,228 +5,129 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020914">
-<title>J.A.R.V.I.S | AI SYSTEM 3.0</title>
+<title>J.A.R.V.I.S | AI SYSTEM 3.1</title>
 
 <style>
 *{box-sizing:border-box}
-:root{
-  --cyan:#00eaff;
-  --blue:#087dff;
-  --dark:#020914;
-}
+:root{--cyan:#00eaff;--blue:#087dff}
 body{
-  margin:0;
-  min-height:100vh;
-  background:radial-gradient(ellipse at 50% 35%,#082a49 0%,#020914 55%,#01050c 100%);
-  color:var(--cyan);
-  font-family:Arial,sans-serif;
-  text-align:center;
-  overflow-x:hidden;
+ margin:0;min-height:100vh;
+ background:radial-gradient(ellipse at 50% 35%,#082a49,#020914 55%,#01050c);
+ color:var(--cyan);font-family:Arial,sans-serif;
+ text-align:center;overflow-x:hidden
 }
 body:before{
-  content:"";
-  position:fixed;
-  inset:0;
-  pointer-events:none;
-  opacity:.13;
-  background-image:
-    linear-gradient(rgba(0,234,255,.12) 1px,transparent 1px),
-    linear-gradient(90deg,rgba(0,234,255,.12) 1px,transparent 1px);
-  background-size:35px 35px;
+ content:"";position:fixed;inset:0;pointer-events:none;opacity:.13;
+ background-image:linear-gradient(rgba(0,234,255,.12) 1px,transparent 1px),
+ linear-gradient(90deg,rgba(0,234,255,.12) 1px,transparent 1px);
+ background-size:35px 35px
 }
 header{
-  padding:22px 10px 5px;
-  font-size:29px;
-  font-weight:bold;
-  letter-spacing:8px;
-  text-shadow:0 0 15px var(--cyan);
+ padding:22px 10px 5px;font-size:29px;font-weight:bold;
+ letter-spacing:8px;text-shadow:0 0 15px var(--cyan)
 }
-.subtitle{
-  font-size:10px;
-  letter-spacing:4px;
-  color:#559dbb;
-}
+.subtitle{font-size:10px;letter-spacing:4px;color:#559dbb}
 #status{
-  margin:18px 0 0;
-  font-size:13px;
-  letter-spacing:3px;
-  color:white;
-  text-shadow:0 0 12px var(--cyan);
+ margin:18px 0 0;font-size:13px;letter-spacing:3px;
+ color:white;text-shadow:0 0 12px var(--cyan)
 }
 .reactor{
-  width:270px;
-  height:270px;
-  margin:22px auto 12px;
-  position:relative;
-  display:flex;
-  align-items:center;
-  justify-content:center;
+ width:270px;height:270px;margin:22px auto 12px;
+ position:relative;display:flex;align-items:center;justify-content:center
 }
 .ring{
-  position:absolute;
-  border-radius:50%;
-  border:1px solid rgba(0,234,255,.65);
-  box-shadow:0 0 15px rgba(0,160,255,.35);
+ position:absolute;border-radius:50%;
+ border:1px solid rgba(0,234,255,.65);
+ box-shadow:0 0 15px rgba(0,160,255,.35)
 }
 .ring.one{
-  width:260px;height:260px;
-  border-top:3px solid var(--cyan);
-  border-bottom:3px solid #087dff;
-  animation:spin 9s linear infinite;
+ width:260px;height:260px;border-top:3px solid var(--cyan);
+ border-bottom:3px solid #087dff;animation:spin 9s linear infinite
 }
 .ring.two{
-  width:225px;height:225px;
-  border-style:dashed;
-  border-color:#078dff;
-  animation:reverseSpin 14s linear infinite;
+ width:225px;height:225px;border-style:dashed;
+ border-color:#078dff;animation:reverseSpin 14s linear infinite
 }
 .ring.three{
-  width:190px;height:190px;
-  border-width:3px;
-  border-left-color:transparent;
-  border-right-color:transparent;
-  animation:spin 5s linear infinite;
+ width:190px;height:190px;border-width:3px;
+ border-left-color:transparent;border-right-color:transparent;
+ animation:spin 5s linear infinite
 }
 .ring.four{
-  width:150px;height:150px;
-  border:2px dotted #00eaff;
-  animation:reverseSpin 7s linear infinite;
+ width:150px;height:150px;border:2px dotted #00eaff;
+ animation:reverseSpin 7s linear infinite
 }
 .core{
-  width:105px;
-  height:105px;
-  border-radius:50%;
-  background:radial-gradient(circle,#39f5ff 0%,#087dff 35%,#03152d 75%);
-  box-shadow:0 0 25px #00dfff,0 0 65px #007bff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:white;
-  font-size:25px;
-  font-weight:bold;
-  animation:pulse 2s infinite alternate;
-  z-index:2;
+ width:105px;height:105px;border-radius:50%;
+ background:radial-gradient(circle,#39f5ff,#087dff 35%,#03152d 75%);
+ box-shadow:0 0 25px #00dfff,0 0 65px #007bff;
+ display:flex;align-items:center;justify-content:center;
+ color:white;font-size:25px;font-weight:bold;
+ animation:pulse 2s infinite alternate;z-index:2
 }
 @keyframes spin{to{transform:rotate(360deg)}}
 @keyframes reverseSpin{to{transform:rotate(-360deg)}}
 @keyframes pulse{
-  from{box-shadow:0 0 20px #00dfff,0 0 35px #007bff}
-  to{box-shadow:0 0 35px #00eaff,0 0 85px #007bff}
+ from{box-shadow:0 0 20px #00dfff,0 0 35px #007bff}
+ to{box-shadow:0 0 35px #00eaff,0 0 85px #007bff}
 }
 .visualizer{
-  height:35px;
-  display:flex;
-  justify-content:center;
-  align-items:center;
-  gap:4px;
-  margin:12px auto;
+ height:35px;display:flex;justify-content:center;
+ align-items:center;gap:4px;margin:12px auto
 }
 .visualizer span{
-  display:block;
-  width:4px;
-  height:7px;
-  background:var(--cyan);
-  border-radius:5px;
-  box-shadow:0 0 8px var(--cyan);
-  animation:wave .8s infinite ease-in-out alternate;
+ display:block;width:4px;height:7px;background:var(--cyan);
+ border-radius:5px;box-shadow:0 0 8px var(--cyan);
+ animation:wave .8s infinite ease-in-out alternate
 }
 .visualizer span:nth-child(2n){animation-delay:.2s}
 .visualizer span:nth-child(3n){animation-delay:.4s}
 .visualizer span:nth-child(4n){animation-delay:.1s}
 @keyframes wave{to{height:28px}}
 .panel{
-  margin:18px 14px;
-  padding:17px;
-  border:1px solid rgba(0,210,255,.45);
-  border-radius:14px;
-  background:rgba(3,20,39,.85);
-  box-shadow:0 0 20px rgba(0,130,255,.12);
-  text-align:left;
+ margin:18px 14px;padding:17px;
+ border:1px solid rgba(0,210,255,.45);border-radius:14px;
+ background:rgba(3,20,39,.85);
+ box-shadow:0 0 20px rgba(0,130,255,.12);text-align:left
 }
 .panel h3{
-  text-align:center;
-  font-size:13px;
-  letter-spacing:3px;
-  margin:0 0 15px;
+ text-align:center;font-size:13px;letter-spacing:3px;margin:0 0 15px
 }
 input{
-  width:100%;
-  padding:14px;
-  margin:6px 0;
-  border:1px solid #087dff;
-  border-radius:8px;
-  background:#020e1c;
-  color:white;
-  font-size:15px;
-  outline:none;
+ width:100%;padding:14px;margin:6px 0;
+ border:1px solid #087dff;border-radius:8px;
+ background:#020e1c;color:white;font-size:15px;outline:none
 }
-input:focus{
-  border-color:var(--cyan);
-  box-shadow:0 0 12px #087dff;
-}
+input:focus{border-color:var(--cyan);box-shadow:0 0 12px #087dff}
 button{
-  padding:12px 17px;
-  margin:5px;
-  border:1px solid var(--cyan);
-  border-radius:7px;
-  background:rgba(0,90,160,.15);
-  color:var(--cyan);
-  font-weight:bold;
-  letter-spacing:1px;
-  cursor:pointer;
-  box-shadow:0 0 10px rgba(0,180,255,.2);
+ padding:12px 17px;margin:5px;border:1px solid var(--cyan);
+ border-radius:7px;background:rgba(0,90,160,.15);
+ color:var(--cyan);font-weight:bold;letter-spacing:1px;
+ cursor:pointer;box-shadow:0 0 10px rgba(0,180,255,.2)
 }
-button:active{
-  background:#087dff;
-  color:white;
-}
-.actions{
-  display:flex;
-  flex-wrap:wrap;
-  justify-content:center;
-}
+button:active{background:#087dff;color:white}
+.actions{display:flex;flex-wrap:wrap;justify-content:center}
 #memoryStatus{
-  text-align:center;
-  color:#8abbd2;
-  font-size:12px;
-  margin-top:12px;
+ text-align:center;color:#8abbd2;font-size:12px;margin-top:12px
 }
 #chat{
-  height:230px;
-  overflow-y:auto;
-  padding:14px;
-  border:1px solid #087dff;
-  border-radius:10px;
-  background:rgba(1,9,20,.85);
-  color:white;
-  text-align:left;
-  line-height:1.6;
-  overflow-wrap:anywhere;
+ height:230px;overflow-y:auto;padding:14px;
+ border:1px solid #087dff;border-radius:10px;
+ background:rgba(1,9,20,.85);color:white;text-align:left;
+ line-height:1.6;overflow-wrap:anywhere
 }
 .user{color:#70dcff;margin-bottom:12px}
 .jarvis{color:white;margin-bottom:15px}
-.chatInput{
-  display:flex;
-  gap:5px;
-  margin-top:10px;
-}
+.chatInput{display:flex;gap:5px;margin-top:10px}
 .chatInput input{flex:1;min-width:0}
 footer{
-  padding:25px 10px;
-  color:#477d9b;
-  font-size:10px;
-  letter-spacing:3px;
+ padding:25px 10px;color:#477d9b;font-size:10px;letter-spacing:3px
 }
-.small{
-  font-size:10px;
-  color:#598da9;
-  text-align:center;
-  margin-top:10px;
-}
+.small{font-size:10px;color:#598da9;text-align:center;margin-top:10px}
 @media(max-width:380px){
-  .reactor{transform:scale(.88);margin-top:5px;margin-bottom:0}
-  header{font-size:25px}
-  button{font-size:11px;padding:11px}
+ .reactor{transform:scale(.88);margin-top:5px;margin-bottom:0}
+ header{font-size:25px}
+ button{font-size:11px;padding:11px}
 }
 </style>
 </head>
@@ -235,70 +136,68 @@ footer{
 
 <header>J.A.R.V.I.S</header>
 <div class="subtitle">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
-
 <div id="status">SYSTEM INITIALIZING</div>
 
 <div class="reactor">
-  <div class="ring one"></div>
-  <div class="ring two"></div>
-  <div class="ring three"></div>
-  <div class="ring four"></div>
-  <div class="core">AI</div>
+ <div class="ring one"></div>
+ <div class="ring two"></div>
+ <div class="ring three"></div>
+ <div class="ring four"></div>
+ <div class="core">AI</div>
 </div>
 
 <div class="visualizer">
-  <span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span>
-  <span></span><span></span><span></span><span></span>
+ <span></span><span></span><span></span><span></span>
+ <span></span><span></span><span></span><span></span>
+ <span></span><span></span><span></span><span></span>
+ <span></span><span></span><span></span><span></span>
+ <span></span><span></span><span></span><span></span>
 </div>
 
 <div class="panel">
-  <h3>🔐 PRIVATE MEMORY SYSTEM</h3>
-  <input id="memoryKey" type="password"
-  placeholder="Enter your private memory key">
+ <h3>🔐 PRIVATE MEMORY SYSTEM</h3>
+ <input id="memoryKey" type="password"
+ placeholder="Enter your private memory key">
 
-  <div class="actions">
-    <button onclick="saveMemoryKey()">SAVE KEY</button>
-    <button onclick="changeMemoryKey()">CHANGE KEY</button>
-    <button onclick="migrateOldMemory()">MIGRATE MEMORY</button>
-  </div>
+ <div class="actions">
+  <button onclick="saveMemoryKey()">SAVE KEY</button>
+  <button onclick="changeMemoryKey()">CHANGE KEY</button>
+  <button onclick="migrateOldMemory()">MIGRATE MEMORY</button>
+ </div>
 
-  <div id="memoryStatus">MEMORY LOCKED</div>
-  <div class="small">Your key is stored in this browser.</div>
+ <div id="memoryStatus">MEMORY LOCKED</div>
+ <div class="small">Your key is stored in this browser.</div>
 </div>
 
 <div class="actions">
  <button onclick="listen()">🎙 START JARVIS</button>
-<button onclick="stopVoice()">⏹ STOP</button>
+ <button onclick="stopVoice()">⏹ STOP</button>
 </div>
 
 <div class="panel">
-  <h3>◈ COMMUNICATION TERMINAL</h3>
+ <h3>◈ COMMUNICATION TERMINAL</h3>
 
-  <div id="chat">
-    <div class="jarvis">
-      JARVIS: Good day, Sir. All systems are operational.
-    </div>
+ <div id="chat">
+  <div class="jarvis">
+   JARVIS: Good day, Sir. All systems are operational.
   </div>
+ </div>
 
-  <div class="chatInput">
-    <input id="message" placeholder="Enter your command..."
-    onkeydown="if(event.key==='Enter')sendMessage()">
-    <button onclick="sendMessage()">SEND</button>
-  </div>
+ <div class="chatInput">
+  <input id="message" placeholder="Enter your command..."
+  onkeydown="if(event.key==='Enter')sendMessage()">
+  <button onclick="sendMessage()">SEND</button>
+ </div>
 </div>
 
 <footer>
-  STARK INDUSTRIES TECHNOLOGY
-  <br><br>
-  JARVIS AI SYSTEM • VERSION 3.0
+ STARK INDUSTRIES TECHNOLOGY
+ <br><br>
+ JARVIS AI SYSTEM • VERSION 3.1
 </footer>
 
 <script>
-const API_URL =
-"https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
+const API_URL="https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
 
 const statusText=document.getElementById("status");
 const chat=document.getElementById("chat");
@@ -313,342 +212,355 @@ let recognitionActive=false;
 let isSpeaking=false;
 let isProcessing=false;
 let wakeWordMode=false;
+let restartTimer=null;
 
 if(memoryKey){
-  memoryInput.value=memoryKey;
-  memoryStatus.innerText="PRIVATE MEMORY KEY LOADED";
+ memoryInput.value=memoryKey;
+ memoryStatus.innerText="PRIVATE MEMORY KEY LOADED";
 }
 
 statusText.innerText="SYSTEM ONLINE";
 
 function saveMemoryKey(){
-  const key=memoryInput.value.trim();
+ const key=memoryInput.value.trim();
 
-  if(key.length<16||key.length>256){
-    alert("Sir, use a key between 16 and 256 characters.");
-    return;
-  }
+ if(key.length<16||key.length>256){
+  alert("Sir, use a key between 16 and 256 characters.");
+  return;
+ }
 
-  memoryKey=key;
-  localStorage.setItem("jarvis_private_key",key);
-  memoryStatus.innerText="PRIVATE MEMORY READY";
-  alert("Private memory key saved, Sir.");
+ memoryKey=key;
+ localStorage.setItem("jarvis_private_key",key);
+ memoryStatus.innerText="PRIVATE MEMORY READY";
+ alert("Private memory key saved, Sir.");
 }
 
 function changeMemoryKey(){
-  if(!confirm("Change the memory key on this device?"))return;
+ if(!confirm("Change the memory key on this device?"))return;
 
-  memoryKey="";
-  localStorage.removeItem("jarvis_private_key");
-  memoryInput.value="";
-  memoryStatus.innerText="MEMORY LOCKED";
+ memoryKey="";
+ localStorage.removeItem("jarvis_private_key");
+ memoryInput.value="";
+ memoryStatus.innerText="MEMORY LOCKED";
 }
 
 async function migrateOldMemory(){
-  if(!memoryKey||memoryKey==="jarvis-personal-memory"){
-    alert("Sir, save your NEW private memory key first.");
-    return;
+ if(!memoryKey||memoryKey==="jarvis-personal-memory"){
+  alert("Sir, save your NEW private memory key first.");
+  return;
+ }
+
+ if(!confirm("Copy your old conversations into this private memory?"))return;
+
+ try{
+  memoryStatus.innerText="MIGRATING MEMORY...";
+
+  const response=await fetch(API_URL,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    action:"migrate",
+    oldKey:"jarvis-personal-memory",
+    newKey:memoryKey
+   })
+  });
+
+  const data=await response.json();
+
+  if(!response.ok||!data.success){
+   throw new Error(data.error||"Migration failed");
   }
 
-  if(!confirm("Copy your old conversations into this private memory?"))return;
+  memoryStatus.innerText="MEMORY MIGRATION COMPLETE";
+  alert("Old memories copied successfully, Sir!");
 
-  try{
-    memoryStatus.innerText="MIGRATING MEMORY...";
-
-    const response=await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        action:"migrate",
-        oldKey:"jarvis-personal-memory",
-        newKey:memoryKey
-      })
-    });
-
-    const data=await response.json();
-
-    if(!response.ok||!data.success){
-      throw new Error(data.error||"Migration failed");
-    }
-
-    memoryStatus.innerText="MEMORY MIGRATION COMPLETE";
-    alert("Old memories copied successfully, Sir!");
-
-  }catch(error){
-    memoryStatus.innerText="MIGRATION FAILED";
-    alert(error.message);
-  }
+ }catch(error){
+  memoryStatus.innerText="MIGRATION FAILED";
+  alert(error.message);
+ }
 }
 
 function addMessage(sender,text){
-  const line=document.createElement("div");
-  line.className=sender==="YOU"?"user":"jarvis";
-  line.textContent=sender+": "+text;
-  chat.appendChild(line);
-  chat.scrollTop=chat.scrollHeight;
+ const line=document.createElement("div");
+ line.className=sender==="YOU"?"user":"jarvis";
+ line.textContent=sender+": "+text;
+ chat.appendChild(line);
+ chat.scrollTop=chat.scrollHeight;
 }
 
 function reply(text){
-  addMessage("JARVIS",text);
-  window.speechSynthesis.cancel();
+ addMessage("JARVIS",text);
+ window.speechSynthesis.cancel();
 
-  const speech=new SpeechSynthesisUtterance(text);
-  speech.lang="en-IN";
-  speech.rate=.95;
-  speech.pitch=1;
+ const speech=new SpeechSynthesisUtterance(text);
+ speech.lang="en-IN";
+ speech.rate=.95;
+ speech.pitch=1;
 
-  isSpeaking=true;
-  statusText.innerText="JARVIS SPEAKING";
+ isSpeaking=true;
+ statusText.innerText="JARVIS SPEAKING";
 
-  speech.onend=()=>{
-    isSpeaking=false;
+ speech.onend=()=>{
+  isSpeaking=false;
 
-    if(conversationMode){
-      statusText.innerText=wakeWordMode
-        ?"WAITING FOR HEY JARVIS"
-        :"READY FOR YOUR NEXT QUESTION";
-      startListening();
-    }else{
-      statusText.innerText="SYSTEM ONLINE";
-    }
-  };
+  if(conversationMode){
+   statusText.innerText=wakeWordMode
+    ?"WAITING FOR HEY JARVIS"
+    :"JARVIS LISTENING";
+   startListening();
+  }else{
+   statusText.innerText="SYSTEM ONLINE";
+  }
+ };
 
-  speech.onerror=()=>{
-    isSpeaking=false;
-    if(conversationMode)startListening();
-  };
+ speech.onerror=()=>{
+  isSpeaking=false;
+  if(conversationMode)startListening();
+ };
 
-  window.speechSynthesis.speak(speech);
+ window.speechSynthesis.speak(speech);
+}
+
+function scheduleListening(){
+ if(restartTimer)clearTimeout(restartTimer);
+
+ if(conversationMode){
+  restartTimer=setTimeout(()=>{
+   restartTimer=null;
+   startListening();
+  },800);
+ }
 }
 
 function startListening(){
-  if(!conversationMode||recognitionActive||isSpeaking||isProcessing)return;
+ if(!conversationMode||recognitionActive||isSpeaking||isProcessing)return;
 
-  const SpeechRecognition=
-    window.SpeechRecognition||window.webkitSpeechRecognition;
+ const SpeechRecognition=
+  window.SpeechRecognition||window.webkitSpeechRecognition;
 
-  if(!SpeechRecognition){
-    statusText.innerText="VOICE NOT SUPPORTED";
+ if(!SpeechRecognition){
+  statusText.innerText="VOICE NOT SUPPORTED";
+  conversationMode=false;
+  return;
+ }
+
+ try{
+  recognition=new SpeechRecognition();
+  recognition.lang="en-IN";
+  recognition.continuous=false;
+  recognition.interimResults=false;
+  recognition.maxAlternatives=1;
+
+  recognition.onstart=()=>{
+   recognitionActive=true;
+   statusText.innerText=wakeWordMode
+    ?"WAITING FOR HEY JARVIS"
+    :"JARVIS LISTENING";
+  };
+
+  recognition.onresult=(event)=>{
+   let command=event.results[0][0].transcript.trim();
+   if(!command)return;
+
+   if(wakeWordMode){
+    const wakePattern=/hey[\s,]+jarvis/i;
+
+    if(!wakePattern.test(command)){
+     statusText.innerText="WAITING FOR HEY JARVIS";
+     return;
+    }
+
+    command=command.replace(wakePattern,"").trim();
+
+    if(!command){
+     reply("Yes Sir. I'm listening.");
+     return;
+    }
+   }
+
+   addMessage("YOU",command);
+   isProcessing=true;
+
+   processCommand(command).finally(()=>{
+    isProcessing=false;
+    if(conversationMode&&!isSpeaking)scheduleListening();
+   });
+  };
+
+  recognition.onerror=(event)=>{
+   statusText.innerText="VOICE ERROR: "+event.error;
+
+   if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
     conversationMode=false;
-    return;
-  }
+    wakeWordMode=false;
+   }
+  };
 
-  try{
-    recognition=new SpeechRecognition();
-    recognition.lang="en-IN";
-    recognition.continuous=false;
-    recognition.interimResults=false;
-    recognition.maxAlternatives=1;
+  recognition.onend=()=>{
+   recognitionActive=false;
 
-    recognition.onstart=()=>{
-      recognitionActive=true;
-      statusText.innerText=wakeWordMode
-        ?"WAITING FOR HEY JARVIS"
-        :"JARVIS LISTENING";
-    };
+   if(conversationMode&&!isSpeaking&&!isProcessing){
+    scheduleListening();
+   }
+  };
 
-    recognition.onresult=(event)=>{
-      let command=event.results[0][0].transcript.trim();
-      if(!command)return;
+  recognition.start();
 
-      if(wakeWordMode){
-        const wakePattern=/hey\s+jarvis/i;
-
-        if(!wakePattern.test(command)){
-          statusText.innerText="WAITING FOR HEY JARVIS";
-          return;
-        }
-
-        command=command.replace(wakePattern,"").trim();
-
-        if(!command){
-          reply("Yes Sir. I'm listening.");
-          return;
-        }
-      }
-
-      addMessage("YOU",command);
-      isProcessing=true;
-
-      processCommand(command).finally(()=>{
-        isProcessing=false;
-      });
-    };
-
-    recognition.onerror=(event)=>{
-      statusText.innerText="VOICE ERROR: "+event.error;
-
-      if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
-        conversationMode=false;
-        wakeWordMode=false;
-      }
-    };
-
-    recognition.onend=()=>{
-      recognitionActive=false;
-
-      if(conversationMode&&!isSpeaking&&!isProcessing){
-        setTimeout(startListening,700);
-      }
-    };
-
-    recognition.start();
-
-  }catch(error){
-    recognitionActive=false;
-    statusText.innerText="VOICE ERROR";
-    console.error(error);
-  }
+ }catch(error){
+  recognitionActive=false;
+  statusText.innerText="VOICE ERROR";
+  console.error(error);
+ }
 }
 
 function listen(){
-  activateWakeWord();
-}
-  }
+ const SpeechRecognition=
+  window.SpeechRecognition||window.webkitSpeechRecognition;
 
-  if(!memoryKey){
-    alert("Sir, save your private memory key first.");
-    memoryInput.focus();
-    return;
-  }
+ if(!SpeechRecognition){
+  alert("Sir, please use Chrome with microphone permission.");
+  return;
+ }
 
-  wakeWordMode=false;
-  conversationMode=true;
-  startListening();
-}
+ if(!memoryKey){
+  alert("Sir, save your private memory key first.");
+  memoryInput.focus();
+  return;
+ }
 
-function activateWakeWord(){
-  const SpeechRecognition=
-    window.SpeechRecognition||window.webkitSpeechRecognition;
+ if(conversationMode&&wakeWordMode&&recognitionActive){
+  statusText.innerText="ALREADY LISTENING";
+  return;
+ }
 
-  if(!SpeechRecognition){
-    alert("Please use Chrome with microphone permission.");
-    return;
-  }
+ if(restartTimer){
+  clearTimeout(restartTimer);
+  restartTimer=null;
+ }
 
-  if(!memoryKey){
-    alert("Sir, save your private memory key first.");
-    memoryInput.focus();
-    return;
-  }
-
-  wakeWordMode=true;
-  conversationMode=true;
-  statusText.innerText="WAITING FOR HEY JARVIS";
-  startListening();
+ wakeWordMode=true;
+ conversationMode=true;
+ statusText.innerText="STARTING JARVIS...";
+ startListening();
 }
 
 async function processCommand(command){
-  const lower=command.trim().toLowerCase();
+ const lower=command.trim().toLowerCase();
 
-  try{
-    if(lower.includes("hello")){
-      reply("Hello Sir. How can I help you?");
-      return;
-    }
-
-    if(lower.includes("your name")){
-      reply("I am JARVIS, your personal AI assistant.");
-      return;
-    }
-
-    if(lower.includes("time")){
-      reply("The time is "+new Date().toLocaleTimeString());
-      return;
-    }
-
-    if(lower.includes("date")){
-      reply("Today's date is "+new Date().toLocaleDateString());
-      return;
-    }
-
-    if(lower.includes("open youtube")){
-      reply("Opening YouTube.");
-      window.open("https://youtube.com","_blank");
-      return;
-    }
-
-    if(lower.includes("open google")){
-      reply("Opening Google.");
-      window.open("https://google.com","_blank");
-      return;
-    }
-
-    if(lower.includes("battery")){
-      if(navigator.getBattery){
-        try{
-          const battery=await navigator.getBattery();
-          reply("Battery level is "+
-          Math.round(battery.level*100)+" percent.");
-        }catch(error){
-          reply("Battery information is unavailable.");
-        }
-      }else{
-        reply("Battery information is not supported.");
-      }
-      return;
-    }
-
-    if(!memoryKey){
-      reply("Sir, please save your private memory key first.");
-      return;
-    }
-
-    statusText.innerText="JARVIS THINKING";
-
-    const response=await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body:JSON.stringify({
-        message:command,
-        memoryKey:memoryKey
-      }),
-      signal:AbortSignal.timeout(45000)
-    });
-
-    const data=await response.json();
-
-    if(!response.ok){
-      throw new Error(data.details||data.error||"AI request failed");
-    }
-
-    if(!data.reply)throw new Error("Empty AI response");
-
-    reply(data.reply);
-
-  }catch(error){
-    console.error("JARVIS ERROR:",error);
-    reply("Sorry Sir. "+error.message);
-    statusText.innerText="CONNECTION ERROR";
+ try{
+  if(lower.includes("hello")){
+   reply("Hello Sir. How can I help you?");
+   return;
   }
+
+  if(lower.includes("your name")){
+   reply("I am JARVIS, your personal AI assistant.");
+   return;
+  }
+
+  if(lower.includes("time")){
+   reply("The time is "+new Date().toLocaleTimeString());
+   return;
+  }
+
+  if(lower.includes("date")){
+   reply("Today's date is "+new Date().toLocaleDateString());
+   return;
+  }
+
+  if(lower.includes("open youtube")){
+   reply("Opening YouTube.");
+   window.open("https://youtube.com","_blank");
+   return;
+  }
+
+  if(lower.includes("open google")){
+   reply("Opening Google.");
+   window.open("https://google.com","_blank");
+   return;
+  }
+
+  if(lower.includes("battery")){
+   if(navigator.getBattery){
+    try{
+     const battery=await navigator.getBattery();
+     reply("Battery level is "+
+      Math.round(battery.level*100)+" percent.");
+    }catch(error){
+     reply("Battery information is unavailable.");
+    }
+   }else{
+    reply("Battery information is not supported.");
+   }
+   return;
+  }
+
+  if(!memoryKey){
+   reply("Sir, please save your private memory key first.");
+   return;
+  }
+
+  statusText.innerText="JARVIS THINKING";
+
+  const response=await fetch(API_URL,{
+   method:"POST",
+   headers:{"Content-Type":"application/json"},
+   body:JSON.stringify({
+    message:command,
+    memoryKey:memoryKey
+   })
+  });
+
+  const data=await response.json();
+
+  if(!response.ok){
+   throw new Error(data.details||data.error||"AI request failed");
+  }
+
+  if(!data.reply)throw new Error("Empty AI response");
+
+  reply(data.reply);
+
+ }catch(error){
+  console.error("JARVIS ERROR:",error);
+  reply("Sorry Sir. "+error.message);
+ }
 }
 
 function sendMessage(){
-  const command=input.value.trim();
-  if(!command)return;
+ const command=input.value.trim();
+ if(!command)return;
 
-  input.value="";
-  addMessage("YOU",command);
+ input.value="";
+ addMessage("YOU",command);
 
-  isProcessing=true;
-  processCommand(command).finally(()=>{
-    isProcessing=false;
-  });
+ if(isProcessing)return;
+
+ isProcessing=true;
+ processCommand(command).finally(()=>{
+  isProcessing=false;
+ });
 }
 
 function stopVoice(){
-  conversationMode=false;
-  wakeWordMode=false;
+ conversationMode=false;
+ wakeWordMode=false;
 
-  if(recognition){
-    try{recognition.abort();}catch(error){}
-  }
+ if(restartTimer){
+  clearTimeout(restartTimer);
+  restartTimer=null;
+ }
 
-  recognitionActive=false;
-  window.speechSynthesis.cancel();
-  isSpeaking=false;
+ if(recognition){
+  try{recognition.abort();}catch(error){}
+ }
 
-  statusText.innerText="SYSTEM STOPPED";
+ recognitionActive=false;
+ window.speechSynthesis.cancel();
+ isSpeaking=false;
+ isProcessing=false;
+
+ statusText.innerText="SYSTEM STOPPED";
 }
 </script>
 
