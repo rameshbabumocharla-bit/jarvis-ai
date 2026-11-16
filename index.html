@@ -5,11 +5,12 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020914">
-<title>J.A.R.V.I.S | AI SYSTEM 3.1</title>
+<title>J.A.R.V.I.S | AI SYSTEM 4.0</title>
 
 <style>
 *{box-sizing:border-box}
 :root{--cyan:#00eaff;--blue:#087dff}
+
 body{
  margin:0;min-height:100vh;
  background:radial-gradient(ellipse at 50% 35%,#082a49,#020914 55%,#01050c);
@@ -172,6 +173,13 @@ footer{
 <div class="actions">
  <button onclick="listen()">🎙 START JARVIS</button>
  <button onclick="stopVoice()">⏹ STOP</button>
+ <button id="voiceLanguageButton" onclick="toggleVoiceLanguage()">
+  🌐 VOICE: ENGLISH
+ </button>
+</div>
+
+<div class="small">
+ Select your speaking language. AI replies can use both Telugu and English.
 </div>
 
 <div class="panel">
@@ -193,7 +201,7 @@ footer{
 <footer>
  STARK INDUSTRIES TECHNOLOGY
  <br><br>
- JARVIS AI SYSTEM • VERSION 3.1
+ JARVIS AI SYSTEM • VERSION 4.0
 </footer>
 
 <script>
@@ -204,6 +212,7 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("message");
 const memoryInput=document.getElementById("memoryKey");
 const memoryStatus=document.getElementById("memoryStatus");
+const voiceLanguageButton=document.getElementById("voiceLanguageButton");
 
 let memoryKey=localStorage.getItem("jarvis_private_key")||"";
 let recognition=null;
@@ -213,6 +222,7 @@ let isSpeaking=false;
 let isProcessing=false;
 let wakeWordMode=false;
 let restartTimer=null;
+let voiceLanguage=localStorage.getItem("jarvis_voice_language")||"en-IN";
 
 if(memoryKey){
  memoryInput.value=memoryKey;
@@ -220,6 +230,35 @@ if(memoryKey){
 }
 
 statusText.innerText="SYSTEM ONLINE";
+updateVoiceButton();
+
+function updateVoiceButton(){
+ voiceLanguageButton.innerText=
+  voiceLanguage==="te-IN"?"🌐 VOICE: TELUGU":"🌐 VOICE: ENGLISH";
+}
+
+function toggleVoiceLanguage(){
+ voiceLanguage=voiceLanguage==="en-IN"?"te-IN":"en-IN";
+ localStorage.setItem("jarvis_voice_language",voiceLanguage);
+ updateVoiceButton();
+
+ if(conversationMode){
+  if(restartTimer){
+   clearTimeout(restartTimer);
+   restartTimer=null;
+  }
+
+  if(recognition){
+   try{recognition.abort();}catch(e){}
+  }
+
+  recognitionActive=false;
+  scheduleListening();
+ }
+
+ statusText.innerText=
+  voiceLanguage==="te-IN"?"TELUGU VOICE SELECTED":"ENGLISH VOICE SELECTED";
+}
 
 function saveMemoryKey(){
  const key=memoryInput.value.trim();
@@ -292,10 +331,25 @@ function reply(text){
  addMessage("JARVIS",text);
  window.speechSynthesis.cancel();
 
+ const teluguPattern=/[\u0C00-\u0C7F]/;
+ const isTelugu=teluguPattern.test(text);
+
  const speech=new SpeechSynthesisUtterance(text);
- speech.lang="en-IN";
+ speech.lang=isTelugu?"te-IN":"en-IN";
  speech.rate=.95;
  speech.pitch=1;
+
+ const voices=window.speechSynthesis.getVoices();
+
+ const preferredVoice=voices.find(v=>
+  v.lang.toLowerCase().startsWith(isTelugu?"te":"en-in")
+ )||voices.find(v=>
+  v.lang.toLowerCase().startsWith(isTelugu?"te":"en")
+ );
+
+ if(preferredVoice){
+  speech.voice=preferredVoice;
+ }
 
  isSpeaking=true;
  statusText.innerText="JARVIS SPEAKING";
@@ -346,7 +400,7 @@ function startListening(){
 
  try{
   recognition=new SpeechRecognition();
-  recognition.lang="en-IN";
+  recognition.lang=voiceLanguage;
   recognition.continuous=false;
   recognition.interimResults=false;
   recognition.maxAlternatives=1;
@@ -363,7 +417,7 @@ function startListening(){
    if(!command)return;
 
    if(wakeWordMode){
-    const wakePattern=/hey[\s,]+jarvis/i;
+    const wakePattern=/hey[\s,]+jarvis|హే[\s,]*జార్విస్/i;
 
     if(!wakePattern.test(command)){
      statusText.innerText="WAITING FOR HEY JARVIS";
@@ -448,7 +502,7 @@ async function processCommand(command){
  const lower=command.trim().toLowerCase();
 
  try{
-  if(lower.includes("hello")){
+  if(lower.includes("hello")||lower.includes("హలో")){
    reply("Hello Sir. How can I help you?");
    return;
   }
