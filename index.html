@@ -5,7 +5,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="theme-color" content="#020914">
-<title>J.A.R.V.I.S | AI SYSTEM 4.0</title>
+<title>J.A.R.V.I.S | AI SYSTEM 5.0</title>
 
 <style>
 *{box-sizing:border-box}
@@ -173,13 +173,10 @@ footer{
 <div class="actions">
  <button onclick="listen()">🎙 START JARVIS</button>
  <button onclick="stopVoice()">⏹ STOP</button>
- <button id="voiceLanguageButton" onclick="toggleVoiceLanguage()">
-  🌐 VOICE: ENGLISH
- </button>
 </div>
 
 <div class="small">
- Select your speaking language. AI replies can use both Telugu and English.
+ AUTOMATIC TELUGU + ENGLISH LANGUAGE ADAPTATION
 </div>
 
 <div class="panel">
@@ -201,7 +198,7 @@ footer{
 <footer>
  STARK INDUSTRIES TECHNOLOGY
  <br><br>
- JARVIS AI SYSTEM • VERSION 4.0
+ JARVIS AI SYSTEM • VERSION 5.0
 </footer>
 
 <script>
@@ -212,7 +209,6 @@ const chat=document.getElementById("chat");
 const input=document.getElementById("message");
 const memoryInput=document.getElementById("memoryKey");
 const memoryStatus=document.getElementById("memoryStatus");
-const voiceLanguageButton=document.getElementById("voiceLanguageButton");
 
 let memoryKey=localStorage.getItem("jarvis_private_key")||"";
 let recognition=null;
@@ -222,7 +218,14 @@ let isSpeaking=false;
 let isProcessing=false;
 let wakeWordMode=false;
 let restartTimer=null;
-let voiceLanguage=localStorage.getItem("jarvis_voice_language")||"en-IN";
+
+let activeLanguage=
+ localStorage.getItem("jarvis_auto_language")||"en-IN";
+
+let languageFailures=0;
+
+const teluguPattern=/[\u0C00-\u0C7F]/;
+const wakePattern=/hey[\s,]+jarvis|హే[\s,]*జార్విస్/i;
 
 if(memoryKey){
  memoryInput.value=memoryKey;
@@ -230,34 +233,18 @@ if(memoryKey){
 }
 
 statusText.innerText="SYSTEM ONLINE";
-updateVoiceButton();
 
-function updateVoiceButton(){
- voiceLanguageButton.innerText=
-  voiceLanguage==="te-IN"?"🌐 VOICE: TELUGU":"🌐 VOICE: ENGLISH";
+function setLanguage(language){
+ activeLanguage=language;
+ localStorage.setItem("jarvis_auto_language",language);
 }
 
-function toggleVoiceLanguage(){
- voiceLanguage=voiceLanguage==="en-IN"?"te-IN":"en-IN";
- localStorage.setItem("jarvis_voice_language",voiceLanguage);
- updateVoiceButton();
+function detectLanguage(text){
+ return teluguPattern.test(text)?"te-IN":"en-IN";
+}
 
- if(conversationMode){
-  if(restartTimer){
-   clearTimeout(restartTimer);
-   restartTimer=null;
-  }
-
-  if(recognition){
-   try{recognition.abort();}catch(e){}
-  }
-
-  recognitionActive=false;
-  scheduleListening();
- }
-
- statusText.innerText=
-  voiceLanguage==="te-IN"?"TELUGU VOICE SELECTED":"ENGLISH VOICE SELECTED";
+function toggleRecognitionLanguage(){
+ setLanguage(activeLanguage==="en-IN"?"te-IN":"en-IN");
 }
 
 function saveMemoryKey(){
@@ -329,22 +316,26 @@ function addMessage(sender,text){
 
 function reply(text){
  addMessage("JARVIS",text);
+
  window.speechSynthesis.cancel();
 
- const teluguPattern=/[\u0C00-\u0C7F]/;
- const isTelugu=teluguPattern.test(text);
-
+ const language=detectLanguage(text);
  const speech=new SpeechSynthesisUtterance(text);
- speech.lang=isTelugu?"te-IN":"en-IN";
+
+ speech.lang=language;
  speech.rate=.95;
  speech.pitch=1;
 
  const voices=window.speechSynthesis.getVoices();
 
  const preferredVoice=voices.find(v=>
-  v.lang.toLowerCase().startsWith(isTelugu?"te":"en-in")
+  v.lang.toLowerCase().startsWith(
+   language==="te-IN"?"te":"en-in"
+  )
  )||voices.find(v=>
-  v.lang.toLowerCase().startsWith(isTelugu?"te":"en")
+  v.lang.toLowerCase().startsWith(
+   language==="te-IN"?"te":"en"
+  )
  );
 
  if(preferredVoice){
@@ -352,16 +343,17 @@ function reply(text){
  }
 
  isSpeaking=true;
- statusText.innerText="JARVIS SPEAKING";
+ statusText.innerText=
+  language==="te-IN"?"JARVIS SPEAKING • TELUGU":
+  "JARVIS SPEAKING • ENGLISH";
 
  speech.onend=()=>{
   isSpeaking=false;
 
   if(conversationMode){
-   statusText.innerText=wakeWordMode
-    ?"WAITING FOR HEY JARVIS"
-    :"JARVIS LISTENING";
-   startListening();
+   statusText.innerText=wakeWordMode?
+    "WAITING FOR HEY JARVIS":"JARVIS LISTENING";
+   scheduleListening();
   }else{
    statusText.innerText="SYSTEM ONLINE";
   }
@@ -369,7 +361,7 @@ function reply(text){
 
  speech.onerror=()=>{
   isSpeaking=false;
-  if(conversationMode)startListening();
+  if(conversationMode)scheduleListening();
  };
 
  window.speechSynthesis.speak(speech);
@@ -400,25 +392,26 @@ function startListening(){
 
  try{
   recognition=new SpeechRecognition();
-  recognition.lang=voiceLanguage;
+  recognition.lang=activeLanguage;
   recognition.continuous=false;
   recognition.interimResults=false;
   recognition.maxAlternatives=1;
 
   recognition.onstart=()=>{
    recognitionActive=true;
-   statusText.innerText=wakeWordMode
-    ?"WAITING FOR HEY JARVIS"
-    :"JARVIS LISTENING";
+   statusText.innerText=
+    "LISTENING • "+activeLanguage.toUpperCase();
   };
 
   recognition.onresult=(event)=>{
    let command=event.results[0][0].transcript.trim();
+
    if(!command)return;
 
-   if(wakeWordMode){
-    const wakePattern=/hey[\s,]+jarvis|హే[\s,]*జార్విస్/i;
+   languageFailures=0;
+   setLanguage(detectLanguage(command));
 
+   if(wakeWordMode){
     if(!wakePattern.test(command)){
      statusText.innerText="WAITING FOR HEY JARVIS";
      return;
@@ -437,8 +430,19 @@ function startListening(){
 
    processCommand(command).finally(()=>{
     isProcessing=false;
-    if(conversationMode&&!isSpeaking)scheduleListening();
+
+    if(conversationMode&&!isSpeaking){
+     scheduleListening();
+    }
    });
+  };
+
+  recognition.onnomatch=()=>{
+   languageFailures++;
+   if(languageFailures>=1){
+    toggleRecognitionLanguage();
+    languageFailures=0;
+   }
   };
 
   recognition.onerror=(event)=>{
@@ -447,6 +451,11 @@ function startListening(){
    if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
     conversationMode=false;
     wakeWordMode=false;
+    return;
+   }
+
+   if(event.error==="no-speech"||event.error==="language-not-supported"){
+    toggleRecognitionLanguage();
    }
   };
 
@@ -482,7 +491,7 @@ function listen(){
   return;
  }
 
- if(conversationMode&&wakeWordMode&&recognitionActive){
+ if(conversationMode&&recognitionActive){
   statusText.innerText="ALREADY LISTENING";
   return;
  }
@@ -498,6 +507,16 @@ function listen(){
  startListening();
 }
 
+function languageInstruction(command){
+ const detected=detectLanguage(command);
+
+ if(detected==="te-IN"){
+  return "Reply in Telugu using Telugu script. If the user naturally mixes English words with Telugu, you may use the same Telugu-English mix. Address the user as Sir. User message: "+command;
+ }
+
+ return "Reply in English. If the user naturally mixes Telugu and English, respond in the same mixed style. Address the user as Sir. User message: "+command;
+}
+
 async function processCommand(command){
  const lower=command.trim().toLowerCase();
 
@@ -507,29 +526,42 @@ async function processCommand(command){
    return;
   }
 
-  if(lower.includes("your name")){
+  if(lower.includes("your name")||lower.includes("నీ పేరు")){
    reply("I am JARVIS, your personal AI assistant.");
    return;
   }
 
-  if(lower.includes("time")){
-   reply("The time is "+new Date().toLocaleTimeString());
+  if(lower.includes("time")||lower.includes("సమయం")){
+   const now=new Date();
+   const time=now.toLocaleTimeString(
+    detectLanguage(command)==="te-IN"?"te-IN":"en-IN"
+   );
+   reply(detectLanguage(command)==="te-IN"?
+    "సర్, ఇప్పుడు సమయం "+time:
+    "Sir, the time is "+time
+   );
    return;
   }
 
-  if(lower.includes("date")){
-   reply("Today's date is "+new Date().toLocaleDateString());
+  if(lower.includes("date")||lower.includes("తేదీ")){
+   const date=new Date().toLocaleDateString(
+    detectLanguage(command)==="te-IN"?"te-IN":"en-IN"
+   );
+   reply(detectLanguage(command)==="te-IN"?
+    "సర్, ఈరోజు తేదీ "+date:
+    "Sir, today's date is "+date
+   );
    return;
   }
 
   if(lower.includes("open youtube")){
-   reply("Opening YouTube.");
+   reply("Opening YouTube, Sir.");
    window.open("https://youtube.com","_blank");
    return;
   }
 
   if(lower.includes("open google")){
-   reply("Opening Google.");
+   reply("Opening Google, Sir.");
    window.open("https://google.com","_blank");
    return;
   }
@@ -538,13 +570,16 @@ async function processCommand(command){
    if(navigator.getBattery){
     try{
      const battery=await navigator.getBattery();
-     reply("Battery level is "+
-      Math.round(battery.level*100)+" percent.");
+     const level=Math.round(battery.level*100);
+     reply(detectLanguage(command)==="te-IN"?
+      "సర్, బ్యాటరీ "+level+" శాతం ఉంది.":
+      "Sir, battery level is "+level+" percent."
+     );
     }catch(error){
-     reply("Battery information is unavailable.");
+     reply("Battery information is unavailable, Sir.");
     }
    }else{
-    reply("Battery information is not supported.");
+    reply("Battery information is not supported, Sir.");
    }
    return;
   }
@@ -560,7 +595,7 @@ async function processCommand(command){
    method:"POST",
    headers:{"Content-Type":"application/json"},
    body:JSON.stringify({
-    message:command,
+    message:languageInstruction(command),
     memoryKey:memoryKey
    })
   });
@@ -591,8 +626,13 @@ function sendMessage(){
  if(isProcessing)return;
 
  isProcessing=true;
+
  processCommand(command).finally(()=>{
   isProcessing=false;
+
+  if(conversationMode&&!isSpeaking){
+   scheduleListening();
+  }
  });
 }
 
