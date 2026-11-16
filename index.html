@@ -4,138 +4,427 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>JARVIS AI</title>
+<meta name="theme-color" content="#020914">
+<title>J.A.R.V.I.S | AI SYSTEM</title>
+
 <style>
-* { box-sizing: border-box; }
-body {
-  margin:0;background:#020914;color:#00cfff;
-  font-family:Arial,sans-serif;text-align:center;
+*{box-sizing:border-box}
+
+:root{
+  --cyan:#00eaff;
+  --blue:#087dff;
+  --dark:#020914;
+  --panel:#06182b;
 }
-header {
-  padding:25px 10px;font-size:30px;font-weight:bold;
-  letter-spacing:5px;text-shadow:0 0 15px #00cfff;
+
+body{
+  margin:0;
+  min-height:100vh;
+  background:
+    radial-gradient(ellipse at 50% 35%,#082a49 0%,#020914 55%,#01050c 100%);
+  color:var(--cyan);
+  font-family:Arial,sans-serif;
+  text-align:center;
+  overflow-x:hidden;
 }
-.circle {
-  width:220px;height:220px;border:3px solid #00cfff;
-  border-radius:50%;margin:35px auto 25px;
-  display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 25px #008cff,inset 0 0 25px #008cff;
-  animation:glow 2s infinite alternate;
+
+body:before{
+  content:"";
+  position:fixed;
+  inset:0;
+  pointer-events:none;
+  opacity:.13;
+  background-image:
+    linear-gradient(rgba(0,234,255,.12) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(0,234,255,.12) 1px,transparent 1px);
+  background-size:35px 35px;
 }
-.core {
-  width:115px;height:115px;border:4px solid #00cfff;
-  border-radius:50%;box-shadow:0 0 25px #00cfff;
-  display:flex;align-items:center;justify-content:center;
-  font-size:27px;
+
+header{
+  padding:22px 10px 5px;
+  font-size:29px;
+  font-weight:bold;
+  letter-spacing:8px;
+  text-shadow:0 0 15px var(--cyan);
 }
-@keyframes glow {
-  from {transform:scale(1)}
-  to {transform:scale(1.06)}
+
+.subtitle{
+  font-size:10px;
+  letter-spacing:4px;
+  color:#559dbb;
 }
-#status {color:white;margin:20px;font-size:14px}
-button {
-  background:transparent;color:#00cfff;
-  border:2px solid #00cfff;border-radius:30px;
-  padding:13px 22px;margin:7px;font-size:15px;
-  box-shadow:0 0 12px #008cff;cursor:pointer;
+
+#status{
+  margin:18px 0 0;
+  font-size:13px;
+  letter-spacing:3px;
+  color:white;
+  text-shadow:0 0 12px var(--cyan);
 }
-button:active {background:#007bff;color:white}
-#chat {
-  margin:25px 15px;padding:15px;
-  border:1px solid #007bff;border-radius:12px;
-  min-height:130px;max-height:300px;
-  overflow-y:auto;color:white;text-align:left;
-  line-height:1.7;overflow-wrap:anywhere;
+
+.reactor{
+  width:270px;
+  height:270px;
+  margin:22px auto 12px;
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
 }
-.user {color:#80dfff;margin-bottom:10px}
-.jarvis {color:white;margin-bottom:15px}
-input {
-  width:85%;max-width:450px;padding:13px;
-  border-radius:20px;border:1px solid #00cfff;
-  background:#061629;color:white;font-size:15px;
-  margin:7px;
+
+.ring{
+  position:absolute;
+  border-radius:50%;
+  border:1px solid rgba(0,234,255,.65);
+  box-shadow:0 0 15px rgba(0,160,255,.35);
 }
-#memoryPanel {
-  margin:15px;padding:15px;border:1px solid #007bff;
-  border-radius:12px;background:#061629;
+
+.ring.one{
+  width:260px;height:260px;
+  border-top:3px solid var(--cyan);
+  border-bottom:3px solid #087dff;
+  animation:spin 9s linear infinite;
 }
-#memoryStatus {font-size:13px;color:white;margin:10px}
-footer {
-  margin-top:35px;padding-bottom:20px;
-  font-size:11px;color:#568da9;
+
+.ring.two{
+  width:225px;height:225px;
+  border-style:dashed;
+  border-color:#078dff;
+  animation:reverseSpin 14s linear infinite;
+}
+
+.ring.three{
+  width:190px;height:190px;
+  border-width:3px;
+  border-left-color:transparent;
+  border-right-color:transparent;
+  animation:spin 5s linear infinite;
+}
+
+.ring.four{
+  width:150px;height:150px;
+  border:2px dotted #00eaff;
+  animation:reverseSpin 7s linear infinite;
+}
+
+.core{
+  width:105px;
+  height:105px;
+  border-radius:50%;
+  background:radial-gradient(circle,#39f5ff 0%,#087dff 35%,#03152d 75%);
+  box-shadow:0 0 25px #00dfff,0 0 65px #007bff;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  color:white;
+  font-size:25px;
+  font-weight:bold;
+  animation:pulse 2s infinite alternate;
+  z-index:2;
+}
+
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes reverseSpin{to{transform:rotate(-360deg)}}
+@keyframes pulse{
+  from{box-shadow:0 0 20px #00dfff,0 0 35px #007bff}
+  to{box-shadow:0 0 35px #00eaff,0 0 85px #007bff}
+}
+
+.visualizer{
+  height:35px;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:4px;
+  margin:12px auto;
+}
+
+.visualizer span{
+  display:block;
+  width:4px;
+  height:7px;
+  background:var(--cyan);
+  border-radius:5px;
+  box-shadow:0 0 8px var(--cyan);
+  animation:wave .8s infinite ease-in-out alternate;
+}
+
+.visualizer span:nth-child(2n){animation-delay:.2s}
+.visualizer span:nth-child(3n){animation-delay:.4s}
+.visualizer span:nth-child(4n){animation-delay:.1s}
+
+@keyframes wave{
+  to{height:28px}
+}
+
+.panel{
+  margin:18px 14px;
+  padding:17px;
+  border:1px solid rgba(0,210,255,.45);
+  border-radius:14px;
+  background:rgba(3,20,39,.85);
+  box-shadow:0 0 20px rgba(0,130,255,.12);
+  text-align:left;
+}
+
+.panel h3{
+  text-align:center;
+  font-size:13px;
+  letter-spacing:3px;
+  margin:0 0 15px;
+}
+
+input{
+  width:100%;
+  padding:14px;
+  margin:6px 0;
+  border:1px solid #087dff;
+  border-radius:8px;
+  background:#020e1c;
+  color:white;
+  font-size:15px;
+  outline:none;
+}
+
+input:focus{
+  border-color:var(--cyan);
+  box-shadow:0 0 12px #087dff;
+}
+
+button{
+  padding:12px 17px;
+  margin:5px;
+  border:1px solid var(--cyan);
+  border-radius:7px;
+  background:rgba(0,90,160,.15);
+  color:var(--cyan);
+  font-weight:bold;
+  letter-spacing:1px;
+  cursor:pointer;
+  box-shadow:0 0 10px rgba(0,180,255,.2);
+}
+
+button:active{
+  background:#087dff;
+  color:white;
+}
+
+.actions{
+  display:flex;
+  flex-wrap:wrap;
+  justify-content:center;
+}
+
+#memoryStatus{
+  text-align:center;
+  color:#8abbd2;
+  font-size:12px;
+  margin-top:12px;
+}
+
+#chat{
+  height:230px;
+  overflow-y:auto;
+  padding:14px;
+  border:1px solid #087dff;
+  border-radius:10px;
+  background:rgba(1,9,20,.85);
+  color:white;
+  text-align:left;
+  line-height:1.6;
+  overflow-wrap:anywhere;
+}
+
+.user{
+  color:#70dcff;
+  margin-bottom:12px;
+}
+
+.jarvis{
+  color:white;
+  margin-bottom:15px;
+}
+
+.chatInput{
+  display:flex;
+  gap:5px;
+  margin-top:10px;
+}
+
+.chatInput input{
+  flex:1;
+  min-width:0;
+}
+
+footer{
+  padding:25px 10px;
+  color:#477d9b;
+  font-size:10px;
+  letter-spacing:3px;
+}
+
+.small{
+  font-size:10px;
+  color:#598da9;
+  text-align:center;
+  margin-top:10px;
+}
+
+@media(max-width:380px){
+  .reactor{transform:scale(.88);margin-top:5px;margin-bottom:0}
+  header{font-size:25px}
+  button{font-size:11px;padding:11px}
 }
 </style>
 </head>
+
 <body>
 
 <header>J.A.R.V.I.S</header>
+<div class="subtitle">JUST A RATHER VERY INTELLIGENT SYSTEM</div>
 
-<div id="memoryPanel">
-  <h3>🔐 PRIVATE MEMORY LOGIN</h3>
-  <input id="memoryKey" type="password"
-    placeholder="Enter your private memory key">
-  <br>
-  <button onclick="saveMemoryKey()">SAVE MEMORY KEY</button>
-  <button onclick="changeMemoryKey()">CHANGE KEY</button>
-  <div id="memoryStatus">Memory key required</div>
-</div>
+<div id="status">SYSTEM INITIALIZING</div>
 
-<div class="circle">
+<div class="reactor">
+  <div class="ring one"></div>
+  <div class="ring two"></div>
+  <div class="ring three"></div>
+  <div class="ring four"></div>
   <div class="core">AI</div>
 </div>
 
-<div id="status">SYSTEM ONLINE</div>
-
-<button onclick="listen()">🎙 START CONVERSATION</button>
-<button onclick="stopVoice()">⏹ STOP</button>
-
-<div id="chat">
-  <div class="jarvis">JARVIS: Hello Sir. Systems are ready.</div>
+<div class="visualizer" id="visualizer">
+  <span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
+  <span></span><span></span><span></span><span></span>
 </div>
 
-<input id="message" placeholder="Type your command..."
- onkeydown="if(event.key==='Enter') sendMessage()">
-<button onclick="sendMessage()">SEND</button>
+<div class="panel">
+  <h3>🔐 PRIVATE MEMORY SYSTEM</h3>
 
-<footer>JARVIS PERSONAL AI ASSISTANT</footer>
+  <input id="memoryKey" type="password"
+  placeholder="Enter your private memory key">
+
+  <div class="actions">
+    <button onclick="saveMemoryKey()">SAVE KEY</button>
+    <button onclick="changeMemoryKey()">CHANGE KEY</button>
+    <button onclick="migrateOldMemory()">MIGRATE MEMORY</button>
+  </div>
+
+  <div id="memoryStatus">MEMORY LOCKED</div>
+  <div class="small">Your key is stored in this browser.</div>
+</div>
+
+<div class="actions">
+  <button onclick="listen()">🎙 START JARVIS</button>
+  <button onclick="stopVoice()">⏹ STOP</button>
+</div>
+
+<div class="panel">
+  <h3>◈ COMMUNICATION TERMINAL</h3>
+
+  <div id="chat">
+    <div class="jarvis">
+      JARVIS: Good day, Sir. All systems are operational.
+    </div>
+  </div>
+
+  <div class="chatInput">
+    <input id="message" placeholder="Enter your command..."
+    onkeydown="if(event.key==='Enter')sendMessage()">
+    <button onclick="sendMessage()">SEND</button>
+  </div>
+</div>
+
+<footer>
+  STARK INDUSTRIES TECHNOLOGY
+  <br><br>
+  JARVIS AI SYSTEM • VERSION 2.0
+</footer>
 
 <script>
+const API_URL =
+"https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
+
 const statusText=document.getElementById("status");
 const chat=document.getElementById("chat");
 const input=document.getElementById("message");
 const memoryInput=document.getElementById("memoryKey");
 const memoryStatus=document.getElementById("memoryStatus");
 
-const API_URL=
-"https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
-
 let memoryKey=localStorage.getItem("jarvis_private_key")||"";
+let recognition=null;
+let conversationMode=false;
+let recognitionActive=false;
+let isSpeaking=false;
+let isProcessing=false;
 
 if(memoryKey){
   memoryInput.value=memoryKey;
-  memoryStatus.innerText="Private memory key loaded on this device";
+  memoryStatus.innerText="PRIVATE MEMORY KEY LOADED";
 }
+
+statusText.innerText="SYSTEM ONLINE";
 
 function saveMemoryKey(){
   const key=memoryInput.value.trim();
 
-  if(key.length<16){
-    alert("Sir, use a key with at least 16 characters.");
+  if(key.length<16||key.length>256){
+    alert("Sir, use a key between 16 and 256 characters.");
     return;
   }
 
   memoryKey=key;
   localStorage.setItem("jarvis_private_key",key);
-  memoryStatus.innerText="Private memory key saved on this device.";
-  alert("Memory key saved, Sir.");
+  memoryStatus.innerText="PRIVATE MEMORY READY";
+  alert("Private memory key saved, Sir.");
 }
 
 function changeMemoryKey(){
+  if(!confirm("Change the memory key on this device?"))return;
+
   memoryKey="";
   localStorage.removeItem("jarvis_private_key");
   memoryInput.value="";
-  memoryStatus.innerText="Enter your memory key.";
-  alert("Local key cleared. Enter your key again.");
+  memoryStatus.innerText="MEMORY LOCKED";
+}
+
+async function migrateOldMemory(){
+  if(!memoryKey||memoryKey==="jarvis-personal-memory"){
+    alert("Sir, save your NEW private memory key first.");
+    return;
+  }
+
+  if(!confirm("Copy your old conversations into this private memory?"))return;
+
+  try{
+    memoryStatus.innerText="MIGRATING MEMORY...";
+
+    const response=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        action:"migrate",
+        oldKey:"jarvis-personal-memory",
+        newKey:memoryKey
+      })
+    });
+
+    const data=await response.json();
+
+    if(!response.ok||!data.success){
+      throw new Error(data.error||"Migration failed");
+    }
+
+    memoryStatus.innerText="MEMORY MIGRATION COMPLETE";
+    alert("Old memories copied successfully, Sir!");
+
+  }catch(error){
+    memoryStatus.innerText="MIGRATION FAILED";
+    alert(error.message);
+  }
 }
 
 function addMessage(sender,text){
@@ -152,9 +441,11 @@ function reply(text){
 
   const speech=new SpeechSynthesisUtterance(text);
   speech.lang="en-IN";
-  speech.rate=0.95;
+  speech.rate=.95;
   speech.pitch=1;
+
   isSpeaking=true;
+  statusText.innerText="JARVIS SPEAKING";
 
   speech.onend=()=>{
     isSpeaking=false;
@@ -168,23 +459,17 @@ function reply(text){
 
   speech.onerror=()=>{
     isSpeaking=false;
-    if(conversationMode) startListening();
+    if(conversationMode)startListening();
   };
 
   window.speechSynthesis.speak(speech);
 }
 
-let recognition=null;
-let conversationMode=false;
-let recognitionActive=false;
-let isSpeaking=false;
-let isProcessing=false;
-
 function startListening(){
   if(!conversationMode||recognitionActive||isSpeaking||isProcessing)return;
 
-  const SpeechRecognition=window.SpeechRecognition||
-    window.webkitSpeechRecognition;
+  const SpeechRecognition=
+    window.SpeechRecognition||window.webkitSpeechRecognition;
 
   if(!SpeechRecognition){
     statusText.innerText="VOICE NOT SUPPORTED";
@@ -201,7 +486,7 @@ function startListening(){
 
     recognition.onstart=()=>{
       recognitionActive=true;
-      statusText.innerText="JARVIS LISTENING...";
+      statusText.innerText="JARVIS LISTENING";
     };
 
     recognition.onresult=(event)=>{
@@ -210,11 +495,13 @@ function startListening(){
 
       addMessage("YOU",command);
       isProcessing=true;
-      processCommand(command).finally(()=>{isProcessing=false;});
+
+      processCommand(command).finally(()=>{
+        isProcessing=false;
+      });
     };
 
     recognition.onerror=(event)=>{
-      console.log("VOICE ERROR:",event.error);
       statusText.innerText="VOICE ERROR: "+event.error;
 
       if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
@@ -224,42 +511,42 @@ function startListening(){
 
     recognition.onend=()=>{
       recognitionActive=false;
+
       if(conversationMode&&!isSpeaking&&!isProcessing){
         setTimeout(startListening,700);
       }
     };
 
     recognition.start();
+
   }catch(error){
     recognitionActive=false;
     statusText.innerText="VOICE ERROR";
-    console.log(error);
+    console.error(error);
   }
 }
 
 function listen(){
-  const SpeechRecognition=window.SpeechRecognition||
-    window.webkitSpeechRecognition;
+  const SpeechRecognition=
+    window.SpeechRecognition||window.webkitSpeechRecognition;
 
   if(!SpeechRecognition){
-    alert("Please use Google Chrome with microphone permission.");
+    alert("Please use Chrome with microphone permission.");
     return;
   }
 
   if(!memoryKey){
-    alert("Sir, please save your private memory key first.");
+    alert("Sir, save your private memory key first.");
     memoryInput.focus();
     return;
   }
 
   conversationMode=true;
-  statusText.innerText="STARTING JARVIS...";
   startListening();
 }
 
 async function processCommand(command){
-  command=command.trim();
-  const lower=command.toLowerCase();
+  const lower=command.trim().toLowerCase();
 
   try{
     if(lower.includes("hello")){
@@ -299,9 +586,9 @@ async function processCommand(command){
         try{
           const battery=await navigator.getBattery();
           reply("Battery level is "+
-            Math.round(battery.level*100)+" percent.");
+          Math.round(battery.level*100)+" percent.");
         }catch(error){
-          reply("Sorry Sir. Battery information is unavailable.");
+          reply("Battery information is unavailable.");
         }
       }else{
         reply("Battery information is not supported.");
@@ -314,7 +601,7 @@ async function processCommand(command){
       return;
     }
 
-    statusText.innerText="CONNECTING TO JARVIS AI...";
+    statusText.innerText="JARVIS THINKING";
 
     const response=await fetch(API_URL,{
       method:"POST",
@@ -332,14 +619,14 @@ async function processCommand(command){
       throw new Error(data.details||data.error||"AI request failed");
     }
 
-    if(!data.reply)throw new Error("AI returned an empty response");
+    if(!data.reply)throw new Error("Empty AI response");
 
     reply(data.reply);
 
   }catch(error){
     console.error("JARVIS ERROR:",error);
     reply("Sorry Sir. "+error.message);
-    statusText.innerText="AI CONNECTION ERROR";
+    statusText.innerText="CONNECTION ERROR";
   }
 }
 
@@ -349,23 +636,27 @@ function sendMessage(){
 
   input.value="";
   addMessage("YOU",command);
-  isProcessing=true;
 
-  processCommand(command).finally(()=>{isProcessing=false;});
+  isProcessing=true;
+  processCommand(command).finally(()=>{
+    isProcessing=false;
+  });
 }
 
 function stopVoice(){
   conversationMode=false;
 
   if(recognition){
-    try{recognition.abort();}catch(error){console.log(error);}
+    try{recognition.abort();}catch(error){}
   }
 
   recognitionActive=false;
   window.speechSynthesis.cancel();
   isSpeaking=false;
+
   statusText.innerText="SYSTEM STOPPED";
 }
 </script>
+
 </body>
 </html>
