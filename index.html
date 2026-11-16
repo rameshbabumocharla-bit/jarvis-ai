@@ -5,126 +5,80 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>JARVIS AI</title>
-
 <style>
 * { box-sizing: border-box; }
-
 body {
-  margin: 0;
-  background: #020914;
-  color: #00cfff;
-  font-family: Arial, sans-serif;
-  text-align: center;
+  margin:0;background:#020914;color:#00cfff;
+  font-family:Arial,sans-serif;text-align:center;
 }
-
 header {
-  padding: 25px 10px;
-  font-size: 30px;
-  font-weight: bold;
-  letter-spacing: 5px;
-  text-shadow: 0 0 15px #00cfff;
+  padding:25px 10px;font-size:30px;font-weight:bold;
+  letter-spacing:5px;text-shadow:0 0 15px #00cfff;
 }
-
 .circle {
-  width: 220px;
-  height: 220px;
-  border: 3px solid #00cfff;
-  border-radius: 50%;
-  margin: 35px auto 25px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 0 25px #008cff,
-              inset 0 0 25px #008cff;
-  animation: glow 2s infinite alternate;
+  width:220px;height:220px;border:3px solid #00cfff;
+  border-radius:50%;margin:35px auto 25px;
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 0 25px #008cff,inset 0 0 25px #008cff;
+  animation:glow 2s infinite alternate;
 }
-
 .core {
-  width: 115px;
-  height: 115px;
-  border: 4px solid #00cfff;
-  border-radius: 50%;
-  box-shadow: 0 0 25px #00cfff;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 27px;
+  width:115px;height:115px;border:4px solid #00cfff;
+  border-radius:50%;box-shadow:0 0 25px #00cfff;
+  display:flex;align-items:center;justify-content:center;
+  font-size:27px;
 }
-
 @keyframes glow {
-  from { transform: scale(1); }
-  to { transform: scale(1.06); }
+  from {transform:scale(1)}
+  to {transform:scale(1.06)}
 }
-
-#status {
-  color: white;
-  margin: 20px;
-  font-size: 14px;
-}
-
+#status {color:white;margin:20px;font-size:14px}
 button {
-  background: transparent;
-  color: #00cfff;
-  border: 2px solid #00cfff;
-  border-radius: 30px;
-  padding: 13px 22px;
-  margin: 7px;
-  font-size: 15px;
-  box-shadow: 0 0 12px #008cff;
-  cursor: pointer;
+  background:transparent;color:#00cfff;
+  border:2px solid #00cfff;border-radius:30px;
+  padding:13px 22px;margin:7px;font-size:15px;
+  box-shadow:0 0 12px #008cff;cursor:pointer;
 }
-
-button:active {
-  background: #007bff;
-  color: white;
-}
-
+button:active {background:#007bff;color:white}
 #chat {
-  margin: 25px 15px;
-  padding: 15px;
-  border: 1px solid #007bff;
-  border-radius: 12px;
-  min-height: 130px;
-  max-height: 300px;
-  overflow-y: auto;
-  color: white;
-  text-align: left;
-  line-height: 1.7;
-  overflow-wrap: anywhere;
+  margin:25px 15px;padding:15px;
+  border:1px solid #007bff;border-radius:12px;
+  min-height:130px;max-height:300px;
+  overflow-y:auto;color:white;text-align:left;
+  line-height:1.7;overflow-wrap:anywhere;
 }
-
-.user {
-  color: #80dfff;
-  margin-bottom: 10px;
-}
-
-.jarvis {
-  color: white;
-  margin-bottom: 15px;
-}
-
+.user {color:#80dfff;margin-bottom:10px}
+.jarvis {color:white;margin-bottom:15px}
 input {
-  width: 65%;
-  padding: 13px;
-  border-radius: 20px;
-  border: 1px solid #00cfff;
-  background: #061629;
-  color: white;
-  font-size: 15px;
+  width:85%;max-width:450px;padding:13px;
+  border-radius:20px;border:1px solid #00cfff;
+  background:#061629;color:white;font-size:15px;
+  margin:7px;
 }
-
+#memoryPanel {
+  margin:15px;padding:15px;border:1px solid #007bff;
+  border-radius:12px;background:#061629;
+}
+#memoryStatus {font-size:13px;color:white;margin:10px}
 footer {
-  margin-top: 35px;
-  padding-bottom: 20px;
-  font-size: 11px;
-  color: #568da9;
+  margin-top:35px;padding-bottom:20px;
+  font-size:11px;color:#568da9;
 }
 </style>
 </head>
-
 <body>
 
 <header>J.A.R.V.I.S</header>
+
+<div id="memoryPanel">
+  <h3>🔐 PRIVATE MEMORY LOGIN</h3>
+  <input id="memoryKey" type="password"
+    placeholder="Enter your private memory key">
+  <br>
+  <button onclick="saveMemoryKey()">SAVE MEMORY KEY</button>
+  <button onclick="changeMemoryKey()">CHANGE KEY</button>
+  <div id="memoryStatus">Memory key required</div>
+</div>
 
 <div class="circle">
   <div class="core">AI</div>
@@ -136,375 +90,282 @@ footer {
 <button onclick="stopVoice()">⏹ STOP</button>
 
 <div id="chat">
-  <div class="jarvis">
-    JARVIS: Hello Sir. Systems are ready.
-  </div>
+  <div class="jarvis">JARVIS: Hello Sir. Systems are ready.</div>
 </div>
 
-<input
-  id="message"
-  placeholder="Type your command..."
-  onkeydown="if(event.key === 'Enter') sendMessage()"
->
-
+<input id="message" placeholder="Type your command..."
+ onkeydown="if(event.key==='Enter') sendMessage()">
 <button onclick="sendMessage()">SEND</button>
 
-<footer>
-  JARVIS PERSONAL AI ASSISTANT
-</footer>
+<footer>JARVIS PERSONAL AI ASSISTANT</footer>
 
 <script>
+const statusText=document.getElementById("status");
+const chat=document.getElementById("chat");
+const input=document.getElementById("message");
+const memoryInput=document.getElementById("memoryKey");
+const memoryStatus=document.getElementById("memoryStatus");
 
-const statusText = document.getElementById("status");
-const chat = document.getElementById("chat");
-const input = document.getElementById("message");
-
-const API_URL =
+const API_URL=
 "https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
 
-// VOICE STATE
+let memoryKey=localStorage.getItem("jarvis_private_key")||"";
 
-let recognition = null;
-let conversationMode = false;
-let recognitionActive = false;
-let isSpeaking = false;
-let isProcessing = false;
-
-// CHAT DISPLAY
-
-function addMessage(sender, text) {
-
-  const line = document.createElement("div");
-
-  line.className =
-    sender === "YOU" ? "user" : "jarvis";
-
-  line.textContent = sender + ": " + text;
-
-  chat.appendChild(line);
-
-  chat.scrollTop = chat.scrollHeight;
+if(memoryKey){
+  memoryInput.value=memoryKey;
+  memoryStatus.innerText="Private memory key loaded on this device";
 }
 
-// SPEAKING FUNCTION
+function saveMemoryKey(){
+  const key=memoryInput.value.trim();
 
-function reply(text) {
+  if(key.length<16){
+    alert("Sir, use a key with at least 16 characters.");
+    return;
+  }
 
-  addMessage("JARVIS", text);
+  memoryKey=key;
+  localStorage.setItem("jarvis_private_key",key);
+  memoryStatus.innerText="Private memory key saved on this device.";
+  alert("Memory key saved, Sir.");
+}
 
+function changeMemoryKey(){
+  memoryKey="";
+  localStorage.removeItem("jarvis_private_key");
+  memoryInput.value="";
+  memoryStatus.innerText="Enter your memory key.";
+  alert("Local key cleared. Enter your key again.");
+}
+
+function addMessage(sender,text){
+  const line=document.createElement("div");
+  line.className=sender==="YOU"?"user":"jarvis";
+  line.textContent=sender+": "+text;
+  chat.appendChild(line);
+  chat.scrollTop=chat.scrollHeight;
+}
+
+function reply(text){
+  addMessage("JARVIS",text);
   window.speechSynthesis.cancel();
 
-  const speech = new SpeechSynthesisUtterance(text);
+  const speech=new SpeechSynthesisUtterance(text);
+  speech.lang="en-IN";
+  speech.rate=0.95;
+  speech.pitch=1;
+  isSpeaking=true;
 
-  speech.lang = "en-IN";
-  speech.rate = 0.95;
-  speech.pitch = 1;
-
-  isSpeaking = true;
-
-  speech.onend = () => {
-    isSpeaking = false;
-
-    if (conversationMode) {
-      statusText.innerText = "READY FOR YOUR NEXT QUESTION";
+  speech.onend=()=>{
+    isSpeaking=false;
+    if(conversationMode){
+      statusText.innerText="READY FOR YOUR NEXT QUESTION";
       startListening();
-    } else {
-      statusText.innerText = "SYSTEM ONLINE";
+    }else{
+      statusText.innerText="SYSTEM ONLINE";
     }
   };
 
-  speech.onerror = () => {
-    isSpeaking = false;
-
-    if (conversationMode) {
-      startListening();
-    }
+  speech.onerror=()=>{
+    isSpeaking=false;
+    if(conversationMode) startListening();
   };
 
   window.speechSynthesis.speak(speech);
 }
 
-// START LISTENING
+let recognition=null;
+let conversationMode=false;
+let recognitionActive=false;
+let isSpeaking=false;
+let isProcessing=false;
 
-function startListening() {
+function startListening(){
+  if(!conversationMode||recognitionActive||isSpeaking||isProcessing)return;
 
-  if (!conversationMode ||
-      recognitionActive ||
-      isSpeaking ||
-      isProcessing) {
-    return;
-  }
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
+  const SpeechRecognition=window.SpeechRecognition||
     window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
-    statusText.innerText = "VOICE NOT SUPPORTED";
-    conversationMode = false;
+  if(!SpeechRecognition){
+    statusText.innerText="VOICE NOT SUPPORTED";
+    conversationMode=false;
     return;
   }
 
-  try {
+  try{
+    recognition=new SpeechRecognition();
+    recognition.lang="en-IN";
+    recognition.continuous=false;
+    recognition.interimResults=false;
+    recognition.maxAlternatives=1;
 
-    recognition = new SpeechRecognition();
-
-    recognition.lang = "en-IN";
-    recognition.continuous = false;
-    recognition.interimResults = false;
-    recognition.maxAlternatives = 1;
-
-    recognition.onstart = () => {
-      recognitionActive = true;
-      statusText.innerText = "JARVIS LISTENING...";
+    recognition.onstart=()=>{
+      recognitionActive=true;
+      statusText.innerText="JARVIS LISTENING...";
     };
 
-    recognition.onresult = (event) => {
+    recognition.onresult=(event)=>{
+      const command=event.results[0][0].transcript.trim();
+      if(!command)return;
 
-      const command =
-        event.results[0][0].transcript.trim();
-
-      if (!command) return;
-
-      addMessage("YOU", command);
-
-      isProcessing = true;
-
-      processCommand(command).finally(() => {
-        isProcessing = false;
-      });
+      addMessage("YOU",command);
+      isProcessing=true;
+      processCommand(command).finally(()=>{isProcessing=false;});
     };
 
-    recognition.onerror = (event) => {
+    recognition.onerror=(event)=>{
+      console.log("VOICE ERROR:",event.error);
+      statusText.innerText="VOICE ERROR: "+event.error;
 
-      console.log("VOICE ERROR:", event.error);
-
-      statusText.innerText =
-        "VOICE ERROR: " + event.error;
-
-      if (
-        event.error === "not-allowed" ||
-        event.error === "service-not-allowed" ||
-        event.error === "audio-capture"
-      ) {
-        conversationMode = false;
+      if(["not-allowed","service-not-allowed","audio-capture"].includes(event.error)){
+        conversationMode=false;
       }
     };
 
-    recognition.onend = () => {
-
-      recognitionActive = false;
-
-      if (
-        conversationMode &&
-        !isSpeaking &&
-        !isProcessing
-      ) {
-        setTimeout(startListening, 700);
+    recognition.onend=()=>{
+      recognitionActive=false;
+      if(conversationMode&&!isSpeaking&&!isProcessing){
+        setTimeout(startListening,700);
       }
     };
 
     recognition.start();
-
-  } catch (error) {
-
-    recognitionActive = false;
-    statusText.innerText = "VOICE ERROR";
-
+  }catch(error){
+    recognitionActive=false;
+    statusText.innerText="VOICE ERROR";
     console.log(error);
   }
 }
 
-// START CONVERSATION
-
-function listen() {
-
-  const SpeechRecognition =
-    window.SpeechRecognition ||
+function listen(){
+  const SpeechRecognition=window.SpeechRecognition||
     window.webkitSpeechRecognition;
 
-  if (!SpeechRecognition) {
+  if(!SpeechRecognition){
     alert("Please use Google Chrome with microphone permission.");
     return;
   }
 
-  conversationMode = true;
+  if(!memoryKey){
+    alert("Sir, please save your private memory key first.");
+    memoryInput.focus();
+    return;
+  }
 
-  statusText.innerText = "STARTING JARVIS...";
-
+  conversationMode=true;
+  statusText.innerText="STARTING JARVIS...";
   startListening();
 }
 
-// MAIN COMMAND PROCESSING
+async function processCommand(command){
+  command=command.trim();
+  const lower=command.toLowerCase();
 
-async function processCommand(command) {
-
-  command = command.trim();
-
-  const lower = command.toLowerCase();
-
-  try {
-
-    if (lower.includes("hello")) {
-
+  try{
+    if(lower.includes("hello")){
       reply("Hello Sir. How can I help you?");
       return;
     }
 
-    if (lower.includes("your name")) {
-
+    if(lower.includes("your name")){
       reply("I am JARVIS, your personal AI assistant.");
       return;
     }
 
-    if (lower.includes("time")) {
-
-      reply("The time is " +
-        new Date().toLocaleTimeString());
-
+    if(lower.includes("time")){
+      reply("The time is "+new Date().toLocaleTimeString());
       return;
     }
 
-    if (lower.includes("date")) {
-
-      reply("Today's date is " +
-        new Date().toLocaleDateString());
-
+    if(lower.includes("date")){
+      reply("Today's date is "+new Date().toLocaleDateString());
       return;
     }
 
-    if (lower.includes("open youtube")) {
-
+    if(lower.includes("open youtube")){
       reply("Opening YouTube.");
-      window.open("https://youtube.com", "_blank");
+      window.open("https://youtube.com","_blank");
       return;
     }
 
-    if (lower.includes("open google")) {
-
+    if(lower.includes("open google")){
       reply("Opening Google.");
-      window.open("https://google.com", "_blank");
+      window.open("https://google.com","_blank");
       return;
     }
 
-    if (lower.includes("battery")) {
-
-      if (navigator.getBattery) {
-
-        try {
-
-          const battery = await navigator.getBattery();
-
-          reply("Battery level is " +
-            Math.round(battery.level * 100) +
-            " percent.");
-
-        } catch (error) {
-
+    if(lower.includes("battery")){
+      if(navigator.getBattery){
+        try{
+          const battery=await navigator.getBattery();
+          reply("Battery level is "+
+            Math.round(battery.level*100)+" percent.");
+        }catch(error){
           reply("Sorry Sir. Battery information is unavailable.");
         }
-
-      } else {
-
+      }else{
         reply("Battery information is not supported.");
       }
-
       return;
     }
 
-    // GEMINI AI CONNECTION
+    if(!memoryKey){
+      reply("Sir, please save your private memory key first.");
+      return;
+    }
 
-    statusText.innerText = "CONNECTING TO JARVIS AI...";
+    statusText.innerText="CONNECTING TO JARVIS AI...";
 
-    const response = await fetch(API_URL, {
-
-      method: "POST",
-
-      headers: {
-        "Content-Type": "application/json"
-      },
-
-      body: JSON.stringify({
-        message: command
+    const response=await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({
+        message:command,
+        memoryKey:memoryKey
       }),
-
-      signal: AbortSignal.timeout(45000)
-
+      signal:AbortSignal.timeout(45000)
     });
 
-    const data = await response.json();
+    const data=await response.json();
 
-    if (!response.ok) {
-
-      throw new Error(
-        data.details?.error?.message ||
-        data.error ||
-        "AI request failed"
-      );
+    if(!response.ok){
+      throw new Error(data.details||data.error||"AI request failed");
     }
 
-    if (!data.reply) {
-      throw new Error("AI returned an empty response");
-    }
+    if(!data.reply)throw new Error("AI returned an empty response");
 
     reply(data.reply);
 
-  }
-
-  catch (error) {
-
-    console.error("JARVIS ERROR:", error);
-
-    reply("Sorry Sir. " + error.message);
-
-    statusText.innerText = "AI CONNECTION ERROR";
+  }catch(error){
+    console.error("JARVIS ERROR:",error);
+    reply("Sorry Sir. "+error.message);
+    statusText.innerText="AI CONNECTION ERROR";
   }
 }
 
-// SEND TEXT MESSAGE
+function sendMessage(){
+  const command=input.value.trim();
+  if(!command)return;
 
-function sendMessage() {
+  input.value="";
+  addMessage("YOU",command);
+  isProcessing=true;
 
-  const command = input.value.trim();
-
-  if (!command) return;
-
-  input.value = "";
-
-  addMessage("YOU", command);
-
-  isProcessing = true;
-
-  processCommand(command).finally(() => {
-    isProcessing = false;
-  });
+  processCommand(command).finally(()=>{isProcessing=false;});
 }
 
-// STOP EVERYTHING
+function stopVoice(){
+  conversationMode=false;
 
-function stopVoice() {
-
-  conversationMode = false;
-  isProcessing = false;
-
-  if (recognition) {
-    try {
-      recognition.abort();
-    } catch (error) {
-      console.log(error);
-    }
+  if(recognition){
+    try{recognition.abort();}catch(error){console.log(error);}
   }
 
-  recognitionActive = false;
-
+  recognitionActive=false;
   window.speechSynthesis.cancel();
-
-  isSpeaking = false;
-
-  statusText.innerText = "SYSTEM STOPPED";
+  isSpeaking=false;
+  statusText.innerText="SYSTEM STOPPED";
 }
-
 </script>
-
 </body>
 </html>
