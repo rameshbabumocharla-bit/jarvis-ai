@@ -7,9 +7,7 @@
 <title>JARVIS AI</title>
 
 <style>
-* {
-  box-sizing: border-box;
-}
+* { box-sizing: border-box; }
 
 body {
   margin: 0;
@@ -32,7 +30,7 @@ header {
   height: 220px;
   border: 3px solid #00cfff;
   border-radius: 50%;
-  margin: 45px auto 25px;
+  margin: 35px auto 25px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -55,13 +53,13 @@ header {
 
 @keyframes glow {
   from { transform: scale(1); }
-  to { transform: scale(1.04); }
+  to { transform: scale(1.06); }
 }
 
 #status {
-  color: #fff;
+  color: white;
   margin: 20px;
-  font-size: 15px;
+  font-size: 14px;
 }
 
 button {
@@ -69,10 +67,11 @@ button {
   color: #00cfff;
   border: 2px solid #00cfff;
   border-radius: 30px;
-  padding: 14px 25px;
-  margin: 8px;
-  font-size: 16px;
+  padding: 13px 22px;
+  margin: 7px;
+  font-size: 15px;
   box-shadow: 0 0 12px #008cff;
+  cursor: pointer;
 }
 
 button:active {
@@ -85,11 +84,23 @@ button:active {
   padding: 15px;
   border: 1px solid #007bff;
   border-radius: 12px;
-  min-height: 100px;
+  min-height: 130px;
+  max-height: 300px;
+  overflow-y: auto;
   color: white;
   text-align: left;
   line-height: 1.7;
   overflow-wrap: anywhere;
+}
+
+.user {
+  color: #80dfff;
+  margin-bottom: 10px;
+}
+
+.jarvis {
+  color: white;
+  margin-bottom: 15px;
 }
 
 input {
@@ -104,6 +115,7 @@ input {
 
 footer {
   margin-top: 35px;
+  padding-bottom: 20px;
   font-size: 11px;
   color: #568da9;
 }
@@ -120,16 +132,19 @@ footer {
 
 <div id="status">SYSTEM ONLINE</div>
 
-<button onclick="listen()">🎙 SPEAK</button>
-<button onclick="stopVoice()">STOP</button>
+<button onclick="listen()">🎙 START CONVERSATION</button>
+<button onclick="stopVoice()">⏹ STOP</button>
 
 <div id="chat">
-  JARVIS: Hello Sir. Systems are ready.
+  <div class="jarvis">
+    JARVIS: Hello Sir. Systems are ready.
+  </div>
 </div>
 
 <input
   id="message"
   placeholder="Type your command..."
+  onkeydown="if(event.key === 'Enter') sendMessage()"
 >
 
 <button onclick="sendMessage()">SEND</button>
@@ -142,175 +157,91 @@ footer {
 
 const statusText = document.getElementById("status");
 const chat = document.getElementById("chat");
+const input = document.getElementById("message");
 
-// JARVIS SPEAKING FUNCTION
+const API_URL =
+"https://jarvis-ai-backend.rameshbabumocharla.workers.dev/";
+
+// VOICE STATE
+
+let recognition = null;
+let conversationMode = false;
+let recognitionActive = false;
+let isSpeaking = false;
+let isProcessing = false;
+
+// CHAT DISPLAY
+
+function addMessage(sender, text) {
+
+  const line = document.createElement("div");
+
+  line.className =
+    sender === "YOU" ? "user" : "jarvis";
+
+  line.textContent = sender + ": " + text;
+
+  chat.appendChild(line);
+
+  chat.scrollTop = chat.scrollHeight;
+}
+
+// SPEAKING FUNCTION
 
 function reply(text) {
-  chat.textContent = "JARVIS: " + text;
 
-  const speech = new SpeechSynthesisUtterance(text);
-  speech.lang = "en-IN";
-  speech.rate = 0.95;
+  addMessage("JARVIS", text);
 
   window.speechSynthesis.cancel();
+
+  const speech = new SpeechSynthesisUtterance(text);
+
+  speech.lang = "en-IN";
+  speech.rate = 0.95;
+  speech.pitch = 1;
+
+  isSpeaking = true;
+
+  speech.onend = () => {
+    isSpeaking = false;
+
+    if (conversationMode) {
+      statusText.innerText = "READY FOR YOUR NEXT QUESTION";
+      startListening();
+    } else {
+      statusText.innerText = "SYSTEM ONLINE";
+    }
+  };
+
+  speech.onerror = () => {
+    isSpeaking = false;
+
+    if (conversationMode) {
+      startListening();
+    }
+  };
+
   window.speechSynthesis.speak(speech);
 }
 
-// MAIN COMMAND PROCESSING
+// START LISTENING
 
-async function processCommand(command) {
+function startListening() {
 
-  command = command.toLowerCase().trim();
-
-  if (command.includes("hello")) {
-    reply("Hello Sir. How can I help you?");
-    statusText.innerText = "SYSTEM ONLINE";
+  if (!conversationMode ||
+      recognitionActive ||
+      isSpeaking ||
+      isProcessing) {
+    return;
   }
-
-  else if (command.includes("your name")) {
-    reply("I am JARVIS, your personal assistant.");
-    statusText.innerText = "SYSTEM ONLINE";
-  }
-
-  else if (command.includes("time")) {
-    reply("The time is " +
-      new Date().toLocaleTimeString());
-    statusText.innerText = "SYSTEM ONLINE";
-  }
-
-  else if (command.includes("date")) {
-    reply("Today's date is " +
-      new Date().toLocaleDateString());
-    statusText.innerText = "SYSTEM ONLINE";
-  }
-
-  else if (command.includes("open youtube")) {
-    reply("Opening YouTube.");
-    statusText.innerText = "SYSTEM ONLINE";
-    window.open("https://youtube.com", "_blank");
-  }
-
-  else if (command.includes("open google")) {
-    reply("Opening Google.");
-    statusText.innerText = "SYSTEM ONLINE";
-    window.open("https://google.com", "_blank");
-  }
-
-  else if (command.includes("battery")) {
-
-    if (navigator.getBattery) {
-
-      try {
-        const battery = await navigator.getBattery();
-
-        reply("Battery level is " +
-          Math.round(battery.level * 100) +
-          " percent.");
-
-      } catch (error) {
-        reply("Sorry Sir. Battery information is unavailable.");
-      }
-
-    } else {
-      reply("Battery information is not supported.");
-    }
-
-    statusText.innerText = "SYSTEM ONLINE";
-  }
-
-  // GEMINI AI CONNECTION
-
-  else {
-
-    reply("Thinking...");
-    statusText.innerText = "CONNECTING TO GEMINI...";
-
-    try {
-
-      const response = await fetch(
-        "https://jarvis-ai-backend.rameshbabumocharla.workers.dev/",
-        {
-          method: "POST",
-
-          headers: {
-            "Content-Type": "application/json"
-          },
-
-          body: JSON.stringify({
-            message: command
-          }),
-
-          signal: AbortSignal.timeout(45000)
-        }
-      );
-
-      const data = await response.json();
-
-      if (!response.ok) {
-
-        const errorMessage =
-          data.details?.error?.message ||
-          data.error ||
-          "Gemini API request failed";
-
-        throw new Error(errorMessage);
-      }
-
-      if (!data.reply) {
-        throw new Error("Gemini returned an empty response");
-      }
-
-      reply(data.reply);
-      statusText.innerText = "SYSTEM ONLINE";
-
-    }
-
-    catch (error) {
-
-      console.error("JARVIS ERROR:", error);
-
-      reply("Sorry Sir. " + error.message);
-
-      statusText.innerText = "AI CONNECTION ERROR";
-    }
-  }
-}
-
-// SEND MESSAGE
-
-function sendMessage() {
-
-  const input = document.getElementById("message");
-
-  const command = input.value.trim();
-
-  if (!command) return;
-
-  chat.textContent = "YOU: " + command;
-
-  input.value = "";
-
-  processCommand(command);
-}
-
-// VOICE RECOGNITION
-
-let recognition;
-
-function listen() {
-
-  alert("JARVIS microphone activated!");
 
   const SpeechRecognition =
     window.SpeechRecognition ||
     window.webkitSpeechRecognition;
 
   if (!SpeechRecognition) {
-
     statusText.innerText = "VOICE NOT SUPPORTED";
-
-    alert("Please open JARVIS in Google Chrome using HTTPS.");
-
+    conversationMode = false;
     return;
   }
 
@@ -321,58 +252,256 @@ function listen() {
     recognition.lang = "en-IN";
     recognition.continuous = false;
     recognition.interimResults = false;
+    recognition.maxAlternatives = 1;
 
     recognition.onstart = () => {
+      recognitionActive = true;
       statusText.innerText = "JARVIS LISTENING...";
     };
 
     recognition.onresult = (event) => {
 
       const command =
-        event.results[0][0].transcript;
+        event.results[0][0].transcript.trim();
 
-      document.getElementById("message").value = command;
+      if (!command) return;
 
-      processCommand(command);
+      addMessage("YOU", command);
+
+      isProcessing = true;
+
+      processCommand(command).finally(() => {
+        isProcessing = false;
+      });
     };
 
     recognition.onerror = (event) => {
 
-      statusText.innerText = "ERROR: " + event.error;
+      console.log("VOICE ERROR:", event.error);
 
-      console.log(event.error);
+      statusText.innerText =
+        "VOICE ERROR: " + event.error;
+
+      if (
+        event.error === "not-allowed" ||
+        event.error === "service-not-allowed" ||
+        event.error === "audio-capture"
+      ) {
+        conversationMode = false;
+      }
     };
 
     recognition.onend = () => {
 
-      if (statusText.innerText === "JARVIS LISTENING...") {
-        statusText.innerText = "SYSTEM ONLINE";
+      recognitionActive = false;
+
+      if (
+        conversationMode &&
+        !isSpeaking &&
+        !isProcessing
+      ) {
+        setTimeout(startListening, 700);
       }
     };
 
     recognition.start();
 
-  }
+  } catch (error) {
 
-  catch (error) {
-
+    recognitionActive = false;
     statusText.innerText = "VOICE ERROR";
 
     console.log(error);
   }
 }
 
-// STOP VOICE
+// START CONVERSATION
+
+function listen() {
+
+  const SpeechRecognition =
+    window.SpeechRecognition ||
+    window.webkitSpeechRecognition;
+
+  if (!SpeechRecognition) {
+    alert("Please use Google Chrome with microphone permission.");
+    return;
+  }
+
+  conversationMode = true;
+
+  statusText.innerText = "STARTING JARVIS...";
+
+  startListening();
+}
+
+// MAIN COMMAND PROCESSING
+
+async function processCommand(command) {
+
+  command = command.trim();
+
+  const lower = command.toLowerCase();
+
+  try {
+
+    if (lower.includes("hello")) {
+
+      reply("Hello Sir. How can I help you?");
+      return;
+    }
+
+    if (lower.includes("your name")) {
+
+      reply("I am JARVIS, your personal AI assistant.");
+      return;
+    }
+
+    if (lower.includes("time")) {
+
+      reply("The time is " +
+        new Date().toLocaleTimeString());
+
+      return;
+    }
+
+    if (lower.includes("date")) {
+
+      reply("Today's date is " +
+        new Date().toLocaleDateString());
+
+      return;
+    }
+
+    if (lower.includes("open youtube")) {
+
+      reply("Opening YouTube.");
+      window.open("https://youtube.com", "_blank");
+      return;
+    }
+
+    if (lower.includes("open google")) {
+
+      reply("Opening Google.");
+      window.open("https://google.com", "_blank");
+      return;
+    }
+
+    if (lower.includes("battery")) {
+
+      if (navigator.getBattery) {
+
+        try {
+
+          const battery = await navigator.getBattery();
+
+          reply("Battery level is " +
+            Math.round(battery.level * 100) +
+            " percent.");
+
+        } catch (error) {
+
+          reply("Sorry Sir. Battery information is unavailable.");
+        }
+
+      } else {
+
+        reply("Battery information is not supported.");
+      }
+
+      return;
+    }
+
+    // GEMINI AI CONNECTION
+
+    statusText.innerText = "CONNECTING TO JARVIS AI...";
+
+    const response = await fetch(API_URL, {
+
+      method: "POST",
+
+      headers: {
+        "Content-Type": "application/json"
+      },
+
+      body: JSON.stringify({
+        message: command
+      }),
+
+      signal: AbortSignal.timeout(45000)
+
+    });
+
+    const data = await response.json();
+
+    if (!response.ok) {
+
+      throw new Error(
+        data.details?.error?.message ||
+        data.error ||
+        "AI request failed"
+      );
+    }
+
+    if (!data.reply) {
+      throw new Error("AI returned an empty response");
+    }
+
+    reply(data.reply);
+
+  }
+
+  catch (error) {
+
+    console.error("JARVIS ERROR:", error);
+
+    reply("Sorry Sir. " + error.message);
+
+    statusText.innerText = "AI CONNECTION ERROR";
+  }
+}
+
+// SEND TEXT MESSAGE
+
+function sendMessage() {
+
+  const command = input.value.trim();
+
+  if (!command) return;
+
+  input.value = "";
+
+  addMessage("YOU", command);
+
+  isProcessing = true;
+
+  processCommand(command).finally(() => {
+    isProcessing = false;
+  });
+}
+
+// STOP EVERYTHING
 
 function stopVoice() {
 
+  conversationMode = false;
+  isProcessing = false;
+
   if (recognition) {
-    recognition.abort();
+    try {
+      recognition.abort();
+    } catch (error) {
+      console.log(error);
+    }
   }
+
+  recognitionActive = false;
 
   window.speechSynthesis.cancel();
 
-  statusText.innerText = "SYSTEM ONLINE";
+  isSpeaking = false;
+
+  statusText.innerText = "SYSTEM STOPPED";
 }
 
 </script>
