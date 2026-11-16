@@ -503,12 +503,8 @@ function startListening(){
 }
 
 function listen(){
-  const SpeechRecognition=
-    window.SpeechRecognition||window.webkitSpeechRecognition;
-
-  if(!SpeechRecognition){
-    alert("Please use Chrome with microphone permission.");
-    return;
+  activateWakeWord();
+}
   }
 
   if(!memoryKey){
